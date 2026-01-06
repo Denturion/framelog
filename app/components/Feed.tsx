@@ -145,105 +145,111 @@ export default function Feed({ refreshKey }: { refreshKey?: number }) {
 
 	return (
 		<div className='p-4 flex flex-col h-full min-h-0'>
-			{/* Search / Suggestions */}
-			<div ref={inputRef} className='mb-3 relative'>
-				<input
-					value={query}
-					onChange={(e) => setQuery(e.target.value)}
-					type='text'
-					placeholder='Search users...'
-					className='w-full bg-(--bg-deep) border border-gray-800 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-(--accent-primary) text-(--text-primary)'
-					aria-label='Search users'
-				/>
+			{/* Fixed header area (no scroll) */}
+			<div className='shrink-0'>
+				{/* Search */}
+				<div ref={inputRef} className='mb-3 relative'>
+					<input
+						value={query}
+						onChange={(e) => setQuery(e.target.value)}
+						type='text'
+						placeholder='Search users...'
+						className='w-full bg-(--bg-deep) border border-gray-800 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-(--accent-primary) text-(--text-primary)'
+						aria-label='Search users'
+					/>
 
-				{(suggestions.length > 0 || suggestLoading) && (
-					<div className='absolute z-50 left-0 right-0 mt-1 bg-(--bg-surface) rounded shadow overflow-hidden'>
-						{suggestLoading ? (
-							<div className='p-2 text-sm text-(--text-muted)'>
-								Searching...
-							</div>
-						) : (
-							<ul>
-								{suggestions.map((s) => (
-									<li key={s._id}>
-										<button
-											onClick={() => {
-												router.push(`/users/${encodeURIComponent(s.username)}`);
-												setSuggestions([]);
-												setQuery('');
-												setSuggestVisible(false);
-											}}
-											className='w-full text-left p-2 hover:bg-(--bg-deep)'
-										>
-											{s.username}
-										</button>
-									</li>
-								))}
-							</ul>
-						)}
-					</div>
+					{(suggestions.length > 0 || suggestLoading) && (
+						<div className='absolute z-50 left-0 right-0 mt-1 bg-(--bg-surface) rounded shadow overflow-hidden'>
+							{suggestLoading ? (
+								<div className='p-2 text-sm text-(--text-muted)'>
+									Searching...
+								</div>
+							) : (
+								<ul>
+									{suggestions.map((s) => (
+										<li key={s._id}>
+											<button
+												onClick={() => {
+													router.push(
+														`/users/${encodeURIComponent(s.username)}`
+													);
+													setSuggestions([]);
+													setQuery('');
+													setSuggestVisible(false);
+												}}
+												className='w-full text-left p-2 hover:bg-(--bg-deep)'
+											>
+												{s.username}
+											</button>
+										</li>
+									))}
+								</ul>
+							)}
+						</div>
+					)}
+				</div>
+
+				{suggestVisible &&
+					query.trim() &&
+					!suggestLoading &&
+					suggestions.length === 0 &&
+					!suggestError && (
+						<div className='p-2 text-sm text-(--text-muted)'>
+							No users found
+						</div>
+					)}
+
+				{suggestError && (
+					<div className='p-2 text-sm text-red-400'>Error: {suggestError}</div>
 				)}
+
+				<h2 className='text-(--text-primary) py-4 font-bold text-center'>
+					Your friends have recently watched
+				</h2>
 			</div>
 
-			{suggestVisible &&
-				query.trim() &&
-				!suggestLoading &&
-				suggestions.length === 0 &&
-				!suggestError && (
-					<div className='p-2 text-sm text-(--text-muted)'>No users found</div>
-				)}
-
-			{suggestError && (
-				<div className='p-2 text-sm text-red-400'>Error: {suggestError}</div>
-			)}
-
-			{items.length === 0 ? (
-				<div className='p-4 text-(--text-muted)'>
-					No recent activity from people you follow.
-				</div>
-			) : (
-				<ul className='flex flex-col gap-3'>
-					<h2 className='text-(--text-primary) py-4 font-bold text-center'>
-						Your friends have recently watched
-					</h2>
-					{items.map((it) => (
-						<li
-							key={`${it.owner._id}-${it.movie.movie_id}`}
-							className='flex items-start gap-3'
-						>
-							{/* Avatar: first letter of username */}
-							<button
-								className='w-9 h-9
-    rounded-full 
-    bg-(--accent-primary)
-    text-white
-    flex items-center justify-center
-    font-semibold
-    hover:opacity-90
-    transition cursor-pointer'
-								onClick={() => router.push(`/users/${it.owner.username}`)}
+			{/* Scrollable feed list */}
+			<div className='flex-1 min-h-0 overflow-y-auto pb-10 no-scrollbar pr-2'>
+				{items.length === 0 ? (
+					<div className='p-4 text-(--text-muted)'>
+						No recent activity from people you follow.
+					</div>
+				) : (
+					<ul className='flex flex-col gap-3'>
+						{items.map((it, index) => (
+							<li
+								key={`${it.owner._id}-${it.movie.movie_id}-${
+									it.movie.date_added ?? index
+								}`}
+								className='flex items-start gap-3'
 							>
-								{it.owner.username.charAt(0).toUpperCase()}
-							</button>
+								{/* Avatar */}
+								<button
+									className='w-9 h-9 rounded-full bg-(--accent-primary) text-white flex items-center justify-center font-semibold hover:opacity-90 transition'
+									onClick={() => router.push(`/users/${it.owner.username}`)}
+								>
+									{it.owner.username.charAt(0).toUpperCase()}
+								</button>
 
-							<div className='flex-1 min-w-0'>
-								<p className='text-sm font-medium text-(--text-primary) line-clamp-2'>
-									{it.movie.title}{' '}
-									<span className='text-xs text-(--text-muted)'>
-										({it.movie.year})
-									</span>
-								</p>
-								<div className='text-xs text-(--text-muted) mt-1 line-clamp-2'>
-									{it.movie.rating
-										? `★ ${it.movie.rating}/10`
-										: 'Not yet rated'}
-									{it.movie.note ? ` • ${it.movie.note}` : ''}
+								<div className='flex-1 min-w-0'>
+									<p className='text-sm font-medium text-(--text-primary) line-clamp-2'>
+										{it.movie.title}{' '}
+										<span className='text-xs text-(--text-muted)'>
+											({it.movie.year})
+										</span>
+									</p>
+									<div className='text-xs text-(--text-muted) mt-1 line-clamp-2'>
+										{it.movie.rating
+											? `★ ${it.movie.rating}/10`
+											: 'Not yet rated'}
+										{it.movie.note ? ` • ${it.movie.note}` : ''}
+									</div>
 								</div>
-							</div>
-						</li>
-					))}
-				</ul>
-			)}
+							</li>
+						))}
+					</ul>
+				)}
+			</div>
 		</div>
 	);
 }

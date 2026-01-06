@@ -99,9 +99,9 @@ export default function MyFullList({
 					}
 				>
 					{/* Render either a grid or column list. Pass a `variant` prop so MovieCard can adapt its internal layout. */}
-					{sortedMovies.map((m) => (
+					{sortedMovies.map((m, index) => (
 						<li
-							key={m.movie_id}
+							key={`${m.movie_id}-${index}`}
 							className={
 								viewMode === 'grid' ? `flex-none min-w-0 w-[200px]` : 'w-full'
 							}

@@ -160,7 +160,7 @@ export default function ProfileClient({ username }: { username: string }) {
 				</button>
 			</nav>
 
-			<div className='md:flex md:h-[calc(100vh-6rem)] flex-1 min-h-0 w-full overflow-hidden'>
+			<div className='md:flex md:h-[calc(100vh-6rem)] flex-1 min-h-0 w-full overflow-hidden  pb-20'>
 				{/* Desktop columns */}
 				<section className='hidden md:flex md:w-3/4 w-full bg-(--bg-primary) flex-col min-h-0'>
 					<div className='flex-1 overflow-y-auto p-4 no-scrollbar'>
