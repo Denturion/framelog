@@ -119,7 +119,7 @@ export default function Header({ pushMovie }: PushMovie) {
 		const res = await logOut();
 
 		if (res.ok) {
-			router.replace('/login');
+			router.replace('/');
 		}
 	};
 
