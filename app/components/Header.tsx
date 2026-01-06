@@ -16,6 +16,7 @@ import { logOut } from '../services/logout';
 import { searchMovies } from '../services/search';
 import { useRouter } from 'next/navigation';
 import Toast from './ui/Toast';
+import { isAuthenticated } from '../isAuthenticated';
 
 export default function Header({ pushMovie }: PushMovie) {
 	const router = useRouter();
@@ -179,8 +180,11 @@ export default function Header({ pushMovie }: PushMovie) {
 					<img
 						src='/logo.png'
 						alt='FrameLog'
-						onClick={() => router.push('/')}
 						className='h-8 md:h-10 cursor-pointer'
+						onClick={async () => {
+							const loggedIn = await isAuthenticated();
+							router.push(loggedIn ? '/dashboard' : '/');
+						}}
 					/>
 				</div>
 				<div className='flex-1 flex justify-center px-2'>

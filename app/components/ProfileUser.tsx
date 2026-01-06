@@ -117,7 +117,7 @@ export default function ProfileClient({ username }: { username: string }) {
 					<p className='text-(--text-muted) text-sm'>Public profile</p>
 				</div>
 
-				<div className='ml-auto'>
+				<div className='ml-auto flex'>
 					<button
 						className={`px-4 py-2 rounded cursor-pointer ${
 							owner.is_followed

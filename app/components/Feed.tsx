@@ -144,7 +144,7 @@ export default function Feed({ refreshKey }: { refreshKey?: number }) {
 	if (loading) return <div className='p-4'>Loading feed...</div>;
 
 	return (
-		<div className='p-4'>
+		<div className='p-4 flex flex-col h-full min-h-0'>
 			{/* Search / Suggestions */}
 			<div ref={inputRef} className='mb-3 relative'>
 				<input
@@ -203,6 +203,9 @@ export default function Feed({ refreshKey }: { refreshKey?: number }) {
 				</div>
 			) : (
 				<ul className='flex flex-col gap-3'>
+					<h2 className='text-(--text-primary) py-4 font-bold text-center'>
+						Your friends have recently watched
+					</h2>
 					{items.map((it) => (
 						<li
 							key={`${it.owner._id}-${it.movie.movie_id}`}

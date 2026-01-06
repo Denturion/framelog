@@ -52,17 +52,21 @@ export function MovieDetailsModal({
 						<label className='block text-sm text-(--text-muted) mb-1'>
 							Rating (1–10)
 						</label>
-						<input
-							type='number'
-							min={1}
-							max={10}
-							value={rating}
+						<select
+							value={rating || ''}
 							onChange={(e) =>
 								setRating(e.target.value === '' ? '' : Number(e.target.value))
 							}
 							disabled={!onSave}
 							className='w-full bg-(--bg-deep) text-(--text-primary) rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-(--accent-primary)'
-						/>
+						>
+							<option value=''>Rate…</option>
+							{Array.from({ length: 10 }, (_, i) => i + 1).map((n) => (
+								<option key={n} value={n}>
+									{n}
+								</option>
+							))}
+						</select>
 					</div>
 					{/* Note */}
 					<div>

@@ -181,7 +181,7 @@ export default function DashboardPage() {
 							</p>
 							<button
 								onClick={GoToFullList}
-								className='mt-4 px-4 py-2 bg-(--accent-primary) text-white rounded'
+								className='mt-4 px-4 py-2 bg-(--accent-primary) text-white rounded cursor-pointer'
 							>
 								Full list
 							</button>
