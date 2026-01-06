@@ -6,7 +6,7 @@ export default function LandingPage() {
 			<div className='max-w-2xl w-full p-8 text-center'>
 				<img src='/logo.png' alt='FrameLog' className='mx-auto h-20 mb-6' />
 				<p className='text-(--text-muted) mb-6'>
-					Keep track of the movies you love and discover what friends are
+					Keep track of the movies you love and discover what your friends are
 					watching.
 				</p>
 
