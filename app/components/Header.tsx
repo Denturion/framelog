@@ -179,7 +179,7 @@ export default function Header({ pushMovie }: PushMovie) {
 					<img
 						src='/logo.png'
 						alt='FrameLog'
-						onClick={GoToDashboard}
+						onClick={() => router.push('/')}
 						className='h-8 md:h-10 cursor-pointer'
 					/>
 				</div>
