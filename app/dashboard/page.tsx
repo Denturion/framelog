@@ -8,6 +8,7 @@ import { IMovie } from '../interfaces/IMovieInterface';
 import { ConfirmModal } from '../components/ui/ConfirmModal';
 import { MovieDetailsModal } from '../components/ui/MovieDetailsModalFixed';
 import { useRouter } from 'next/navigation';
+import { requireAuth } from '../requireAuth';
 
 export default function DashboardPage() {
 	const router = useRouter();
@@ -20,6 +21,14 @@ export default function DashboardPage() {
 
 	const [selectedMovie, setSelectedMovie] = useState<IMovie | null>(null);
 	const [activeTab, setActiveTab] = useState<'list' | 'home' | 'feed'>('home');
+
+	useEffect(() => {
+		requireAuth().then((ok) => {
+			if (!ok) {
+				router.push('/login');
+			}
+		});
+	}, []);
 
 	//Open movie details modal
 	function openDetail(movie: IMovie) {
