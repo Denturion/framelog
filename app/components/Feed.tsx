@@ -136,7 +136,7 @@ export default function Feed({ refreshKey }: { refreshKey?: number }) {
 										<li key={s._id}>
 											<button
 												onClick={() => handleSuggestionClick(s.username)}
-												className='w-full text-left p-2 hover:bg-(--bg-deep)'
+												className='w-full text-left p-2 hover:bg-(--bg-deep) text-(--text-primary)'
 											>
 												{s.username}
 											</button>

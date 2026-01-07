@@ -26,7 +26,7 @@ export default function Header({ pushMovie }: PushMovie) {
 	const router = useRouter();
 	const headerRef = useRef<HTMLDivElement | null>(null);
 
-	const [userInitial, setUserInitial] = useState<string>('U');
+	const [userInitial, setUserInitial] = useState<string>('');
 	const [username, setUsername] = useState<string | null>(null);
 	const [query, setQuery] = useState('');
 	const [results, setResults] = useState<OmdbMovie[]>([]);
@@ -178,29 +178,19 @@ export default function Header({ pushMovie }: PushMovie) {
 				<div className='flex items-center gap-3 md:gap-6 ml-2'>
 					<button
 						onClick={() => router.push('/mylist')}
-						className='text-sm text-(--text-muted) hover:text-(--text-primary) transition cursor-pointer'
+						className='flex items-center justify-center w-12 h-12 rounded-full bg-(--bg-deep) hover:bg-(--bg-surface) hover:text-(--accent-primary) transition cursor-pointer'
+						aria-label='Open profile'
+						title={username ? username : 'Profile'}
 					>
-						My List
+						<span className='font-semibold '>{userInitial}</span>
 					</button>
-
 					<button
 						onClick={handleLogout}
-						className='flex items-center justify-center w-9 h-9 rounded-full bg-(--bg-deep) text-(--text-muted) hover:text-red-400 hover:bg-red-500/10 transition cursor-pointer'
+						className='flex items-center justify-center w-10 h-10 rounded-full bg-(--text-muted)   text-red-400 hover:text-(--text-muted) hover:bg-red-700 transition cursor-pointer'
 						aria-label='Log out'
 						title='Log out'
 					>
 						⎋
-					</button>
-
-					<button
-						onClick={() => router.push('/mylist')}
-						className='flex items-center justify-center w-9 h-9 rounded-full bg-(--bg-deep) text-(--text-muted) hover:bg-(--bg-deep)/90 transition cursor-pointer'
-						aria-label='Open profile'
-						title={username ? username : 'Profile'}
-					>
-						<span className='font-semibold text-(--text-primary)'>
-							{userInitial}
-						</span>
 					</button>
 				</div>
 

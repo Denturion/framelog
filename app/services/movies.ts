@@ -35,12 +35,9 @@ export async function addMovie(movie: MoviePayload) {
 	return res.json();
 }
 
-export async function updateMovie(
-	movieId: string,
-	updates: Partial<MoviePayload>
-) {
+export async function updateMovie(_id: string, updates: Partial<MoviePayload>) {
 	const res = await fetch(
-		`${process.env.NEXT_PUBLIC_API_URL}/api/movies/${movieId}`,
+		`${process.env.NEXT_PUBLIC_API_URL}/api/movies/${_id}`,
 		{
 			method: 'PUT',
 			credentials: 'include',
@@ -54,9 +51,9 @@ export async function updateMovie(
 	return res.json();
 }
 
-export async function deleteMovie(movieId: string) {
+export async function deleteMovie(_id: string) {
 	const res = await fetch(
-		`${process.env.NEXT_PUBLIC_API_URL}/api/movies/${movieId}`,
+		`${process.env.NEXT_PUBLIC_API_URL}/api/movies/${_id}`,
 		{
 			method: 'DELETE',
 			credentials: 'include',

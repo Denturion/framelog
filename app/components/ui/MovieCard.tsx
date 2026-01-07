@@ -2,7 +2,7 @@ import { IMovie } from '@/app/interfaces/IMovieInterface';
 
 type MovieCardProps = {
 	movie: IMovie;
-	onRemoveRequest?: (movieId: string) => void;
+	onRemoveRequest?: (_id: string) => void;
 	onSelect: (movie: IMovie) => void;
 	variant?: 'grid' | 'list' | 'dashboard';
 };
@@ -13,14 +13,14 @@ export default function MovieCard({
 	onSelect,
 	variant = 'grid',
 }: MovieCardProps) {
-	const { movie_id, title, year, poster_url, rating, note, date_added } = movie;
+	const { _id, title, year, poster_url, rating, note, date_added } = movie;
 
 	// List variant: horizontal row with poster, metadata and an inline remove button
 	if (variant === 'list') {
 		return (
 			<div
 				onClick={() => onSelect(movie)}
-				className='group bg-(--bg-surface) rounded-lg overflow-hidden relative flex flex-row items-start gap-4 p-3'
+				className='group bg-(--bg-primary) hover:bg-(--bg-surface) rounded-lg overflow-hidden relative flex flex-row items-start gap-4 p-3'
 			>
 				{/* Poster (left) */}
 				<div className='w-20 h-28 shrink-0 overflow-hidden rounded-md'>
@@ -59,7 +59,7 @@ export default function MovieCard({
 					<button
 						onClick={(e) => {
 							e.stopPropagation();
-							onRemoveRequest(movie_id);
+							onRemoveRequest(movie._id);
 						}}
 						className='w-8 h-8 flex items-center justify-center rounded-full bg-black/40 text-white text-sm hover:bg-red-500 transition'
 						aria-label='Remove movie'
@@ -78,14 +78,15 @@ export default function MovieCard({
 				onClick={() => onSelect(movie)}
 				className='
 				group
-				bg-(--bg-surface)
+				relative
+				bg-(--bg-primary)
 				rounded-lg
 				p-3
 				flex
 				items-center
 				gap-3
 				cursor-pointer
-				hover:bg-(--bg-deep)
+				hover:bg-(--bg-surface)
 				transition
 				
 			'
@@ -98,6 +99,32 @@ export default function MovieCard({
 						className='w-full h-full object-cover'
 					/>
 				</div>
+
+				{/* Delete */}
+				{onRemoveRequest && (
+					<button
+						onClick={(e) => {
+							e.stopPropagation();
+							onRemoveRequest(movie._id);
+						}}
+						className='
+          absolute top-2 right-2
+          w-7 h-7
+          flex items-center justify-center
+          rounded-full
+          bg-black/40
+          text-white
+          text-sm
+          hover:bg-red-500
+          transition
+          opacity-0
+          group-hover:opacity-100
+        '
+						aria-label='Remove movie'
+					>
+						✕
+					</button>
+				)}
 
 				{/* Text */}
 				<div className='flex-1 min-w-0'>
@@ -124,7 +151,8 @@ export default function MovieCard({
 			onClick={() => onSelect(movie)}
 			className='
     group
-    bg-(--bg-surface)
+    bg-(--bg-deep)
+	hover:bg-(--bg-surface)
     rounded-lg
     overflow-hidden
     relative
@@ -145,7 +173,7 @@ export default function MovieCard({
 				<button
 					onClick={(e) => {
 						e.stopPropagation();
-						onRemoveRequest(movie_id);
+						onRemoveRequest(movie._id);
 					}}
 					className='
           absolute top-2 right-2

@@ -102,7 +102,7 @@ export default function DashboardPage() {
 	return (
 		<>
 			<Header pushMovie={notifyListChanged} />
-			<main className='flex flex-col md:h-[calc(100vh-6rem)]'>
+			<main className='flex flex-col md:h-[calc(100vh-6rem)] '>
 				{/* Mobile tab bar */}
 				<nav className='md:hidden flex bg-(--bg-deep) border-t border-b'>
 					<button
@@ -146,12 +146,10 @@ export default function DashboardPage() {
 							</h2>
 							<span className='text-m text-(--text-muted) '>
 								{movies.length === 0
-									? `Your list is empty. ${(
-											<br />
-									  )}You haven’t added any movies yet.
-Start by adding a film you’ve watched recently to build your collection.`
-									: movies.length}{' '}
-								movies
+									? 'Your list is empty.'
+									: `${movies.length} ${
+											movies.length === 1 ? 'movie' : 'movies'
+									  }`}
 							</span>
 						</div>
 
@@ -166,7 +164,7 @@ Start by adding a film you’ve watched recently to build your collection.`
 
 					<section className='hidden md:flex flex-1 w-full bg-(--bg-primary) p-6 md:p-10 overflow-hidden'>
 						<div className='max-w-xl mx-auto text-center'>
-							<h1 className='text-2xl font-semibold text-(--text-primary)'>
+							<h1 className='text-2xl font-semibold text-(--text-primary) mt-10 mb-10'>
 								Welcome to your movie log
 							</h1>
 							<p className='text-(--text-muted) mt-2'>
@@ -178,7 +176,7 @@ Start by adding a film you’ve watched recently to build your collection.`
 							</p>
 							<button
 								onClick={handleGoToFullList}
-								className='mt-4 px-4 py-2 bg-(--accent-primary) text-white rounded cursor-pointer'
+								className='mt-10 px-4 py-2 bg-(--accent-primary) text-white rounded cursor-pointer '
 							>
 								Full list
 							</button>

@@ -6,7 +6,7 @@ import MovieCard from './ui/MovieCard';
 
 type Props = {
 	movieList: IMovie[];
-	onRemoveRequest?: (movie_id: string) => void;
+	onRemoveRequest?: (_id: string) => void;
 	onSelect: (movie: IMovie) => void;
 };
 
@@ -104,7 +104,7 @@ export default function MyFullList({
 					>
 						{sortedMovies.map((m, index) => (
 							<li
-								key={`${m.movie_id}-${index}`}
+								key={`${m._id}-${index}`}
 								className={
 									viewMode === 'grid' ? 'flex-none min-w-0 w-[200px]' : 'w-full'
 								}

@@ -15,11 +15,17 @@ export default function RegisterForm() {
 	const [error, setError] = useState('');
 	const [showModal, setShowModal] = useState(false);
 	const [countdown, setCountdown] = useState(3);
+	const [confirmPassword, setConfirmPassword] = useState('');
 
 	// Handlers
 	const handleRegister = async (e: React.FormEvent) => {
 		e.preventDefault();
 		setError('');
+
+		if (password !== confirmPassword) {
+			setError('Passwords do not match');
+			return;
+		}
 
 		try {
 			const res = await register({ username, email, password });
@@ -73,6 +79,12 @@ export default function RegisterForm() {
 					placeholder='Password'
 					value={password}
 					onChange={(e) => setPassword(e.target.value)}
+				/>
+				<Input
+					type='password'
+					placeholder='Password'
+					value={confirmPassword}
+					onChange={(e) => setConfirmPassword(e.target.value)}
 				/>
 
 				<button className='rounded-md bg-(--accent-primary) p-3 font-bold text-(--bg-primary)'>

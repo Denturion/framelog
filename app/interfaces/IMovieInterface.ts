@@ -1,4 +1,5 @@
 export interface IMovie {
+	_id: string;
 	movie_id: string;
 	title: string;
 	year: string;
