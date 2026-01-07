@@ -20,7 +20,7 @@ export default function MovieCard({
 		return (
 			<div
 				onClick={() => onSelect(movie)}
-				className='group bg-(--bg-primary) hover:bg-(--bg-surface) rounded-lg overflow-hidden relative flex flex-row items-start gap-4 p-3'
+				className='group bg-(--bg-primary) hover:bg-(--bg-surface) rounded-lg overflow-hidden cursor-pointer relative flex flex-row items-start gap-4 p-3'
 			>
 				{/* Poster (left) */}
 				<div className='w-20 h-28 shrink-0 overflow-hidden rounded-md'>
@@ -156,6 +156,7 @@ export default function MovieCard({
     rounded-lg
     overflow-hidden
     relative
+	cursor-pointer
     flex flex-col
   '
 		>

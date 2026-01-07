@@ -29,8 +29,8 @@ export default function MyListPage() {
 
 	const handleSaveMovieChanges = async (updated: Partial<IMovie>) => {
 		try {
-			if (!updated.movie_id) return;
-			await updateMovie(updated.movie_id, updated);
+			if (!updated._id) return;
+			await updateMovie(updated._id, updated);
 			notifyListChanged();
 			handleCloseDetails();
 		} catch (err) {

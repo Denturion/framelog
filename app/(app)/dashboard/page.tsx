@@ -34,8 +34,8 @@ export default function DashboardPage() {
 
 	const handleSaveMovieChanges = async (updated: Partial<IMovie>) => {
 		try {
-			if (!updated.movie_id) return;
-			await updateMovie(updated.movie_id, updated);
+			if (!updated._id) return;
+			await updateMovie(updated._id, updated);
 			notifyListChanged();
 			handleCloseDetails();
 		} catch (err) {
@@ -43,13 +43,14 @@ export default function DashboardPage() {
 		}
 	};
 
-	const handleRequestRemove = (movieId: string) => {
-		setMovieToRemove(movieId);
+	const handleRequestRemove = (_Id: string) => {
+		setMovieToRemove(_Id);
 		setConfirmOpen(true);
 	};
 
 	const handleConfirmRemove = async () => {
 		if (!movieToRemove) return;
+
 		try {
 			await deleteMovie(movieToRemove);
 			notifyListChanged();

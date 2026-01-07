@@ -3,11 +3,16 @@
  * Handles movie CRUD operations and movie list retrieval
  */
 
-export interface MoviePayload {
+// POST / add
+export interface AddMoviePayload {
 	movie_id: string;
 	title: string;
 	year: string;
 	poster_url: string;
+}
+
+// PUT / update
+export interface UpdateMoviePayload {
 	rating?: number | null;
 	note?: string;
 }
@@ -22,7 +27,7 @@ export async function getMyMovies() {
 	return res.json();
 }
 
-export async function addMovie(movie: MoviePayload) {
+export async function addMovie(movie: AddMoviePayload) {
 	const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/movies`, {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json' },
@@ -35,7 +40,10 @@ export async function addMovie(movie: MoviePayload) {
 	return res.json();
 }
 
-export async function updateMovie(_id: string, updates: Partial<MoviePayload>) {
+export async function updateMovie(
+	_id: string,
+	updates: Partial<UpdateMoviePayload>
+) {
 	const res = await fetch(
 		`${process.env.NEXT_PUBLIC_API_URL}/api/movies/${_id}`,
 		{

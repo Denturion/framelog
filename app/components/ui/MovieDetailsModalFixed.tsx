@@ -18,7 +18,7 @@ export function MovieDetailsModal({
 	function handleSave() {
 		if (!onSave) return;
 		onSave({
-			movie_id: movie.movie_id,
+			_id: movie._id,
 			rating: rating === '' ? undefined : rating,
 			note,
 		});
