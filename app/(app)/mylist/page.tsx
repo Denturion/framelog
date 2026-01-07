@@ -82,42 +82,45 @@ export default function MyListPage() {
 	return (
 		<>
 			<Header pushMovie={notifyListChanged} />
-			{/* Mobile tab bar */}
-			<nav className='md:hidden flex bg-(--bg-deep) border-t border-b'>
-				<button
-					className={`flex-1 p-3 text-center font-semibold ${
-						activeTab === 'list'
-							? ' text-(--accent-primary)'
-							: 'text-(--text-primary)'
-					}`}
-					onClick={() => setActiveTab('list')}
-				>
-					My List
-				</button>
-				<button
-					className={`flex-1 p-3 text-center font-semibold ${
-						activeTab === 'home'
-							? ' text-(--accent-primary)'
-							: 'text-(--text-primary)'
-					}`}
-					onClick={() => setActiveTab('home')}
-				>
-					Overview
-				</button>
-				<button
-					className={`flex-1 p-3 text-center font-semibold ${
-						activeTab === 'feed'
-							? ' text-(--accent-primary)'
-							: 'text-(--text-primary)'
-					}`}
-					onClick={() => setActiveTab('feed')}
-				>
-					Feed
-				</button>
-			</nav>
-			<main className='md:flex md:h-[calc(100vh-6rem)] w-full overflow-hidden'>
-				<section className='md:flex md:w-3/4 w-full bg-(--bg-primary) flex flex-col'>
-					<div className='max-w-xl mx-auto text-center'>
+			<main className='flex flex-col md:h-[calc(100vh-6rem)]'>
+				{/* Mobile tab bar */}
+				<nav className='md:hidden flex bg-(--bg-deep) border-t border-b'>
+					<button
+						className={`flex-1 p-3 text-center font-semibold ${
+							activeTab === 'list'
+								? ' text-(--accent-primary)'
+								: 'text-(--text-primary)'
+						}`}
+						onClick={() => setActiveTab('list')}
+					>
+						My List
+					</button>
+					<button
+						className={`flex-1 p-3 text-center font-semibold ${
+							activeTab === 'home'
+								? ' text-(--accent-primary)'
+								: 'text-(--text-primary)'
+						}`}
+						onClick={() => setActiveTab('home')}
+					>
+						Overview
+					</button>
+					<button
+						className={`flex-1 p-3 text-center font-semibold ${
+							activeTab === 'feed'
+								? ' text-(--accent-primary)'
+								: 'text-(--text-primary)'
+						}`}
+						onClick={() => setActiveTab('feed')}
+					>
+						Feed
+					</button>
+				</nav>
+
+				<div className='md:flex flex-1 min-h-0'>
+					{/* Desktop: two-column layout */}
+				<section className='hidden md:flex md:w-3/4 w-full bg-(--bg-primary) flex-col'>
+					<div className='max-w-xl mx-auto text-center pt-6'>
 						<h1 className='text-2xl font-semibold text-(--text-primary) pb-3'>
 							Your list
 						</h1>
@@ -133,8 +136,6 @@ export default function MyListPage() {
 				<section className='hidden md:flex md:w-1/4 w-full bg-(--bg-deep) overflow-y-auto rounded-tl-lg'>
 					<Feed />
 				</section>
-
-				{/* Mobile panels */}
 				<div className='block md:hidden h-[calc(100vh-6rem)] overflow-hidden w-full'>
 					{activeTab === 'list' && (
 						<section className='w-full bg-(--bg-deep) flex flex-col h-full min-h-0'>
@@ -165,8 +166,9 @@ export default function MyListPage() {
 						</section>
 					)}
 				</div>
-			</main>
-			<ConfirmModal
+			</div>
+		</main>
+		<ConfirmModal
 				open={confirmOpen}
 				title='Remove movie'
 				message='Do you really want to remove this movie?'

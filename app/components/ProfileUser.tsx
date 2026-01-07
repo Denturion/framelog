@@ -106,85 +106,90 @@ export default function ProfileClient({ username }: { username: string }) {
 				</div>
 			</header>
 
-			{/* Responsive layout: desktop three columns, mobile tabs */}
-			<nav className='md:hidden flex bg-(--bg-deep) border-t border-b mb-2'>
-				<button
-					className={`flex-1 p-3 text-center font-semibold ${
-						activeTab === 'list'
-							? ' text-(--accent-primary)'
-							: 'text-(--text-primary)'
-					}`}
-					onClick={() => setActiveTab('list')}
-				>
-					List
-				</button>
-				<button
-					className={`flex-1 p-3 text-center font-semibold ${
-						activeTab === 'home'
-							? ' text-(--accent-primary)'
-							: 'text-(--text-primary)'
-					}`}
-					onClick={() => setActiveTab('home')}
-				>
-					About
-				</button>
-				<button
-					className={`flex-1 p-3 text-center font-semibold ${
-						activeTab === 'feed'
-							? ' text-(--accent-primary)'
-							: 'text-(--text-primary)'
-					}`}
-					onClick={() => setActiveTab('feed')}
-				>
-					Feed
-				</button>
-			</nav>
+			<div className='flex flex-col md:h-[calc(100vh-6rem)]'>
+				{/* Mobile tab bar */}
+				<nav className='md:hidden flex bg-(--bg-deep) border-t border-b'>
+					<button
+						className={`flex-1 p-3 text-center font-semibold ${
+							activeTab === 'list'
+								? ' text-(--accent-primary)'
+								: 'text-(--text-primary)'
+						}`}
+						onClick={() => setActiveTab('list')}
+					>
+						List
+					</button>
+					<button
+						className={`flex-1 p-3 text-center font-semibold ${
+							activeTab === 'home'
+								? ' text-(--accent-primary)'
+								: 'text-(--text-primary)'
+						}`}
+						onClick={() => setActiveTab('home')}
+					>
+						About
+					</button>
+					<button
+						className={`flex-1 p-3 text-center font-semibold ${
+							activeTab === 'feed'
+								? ' text-(--accent-primary)'
+								: 'text-(--text-primary)'
+						}`}
+						onClick={() => setActiveTab('feed')}
+					>
+						Feed
+					</button>
+				</nav>
 
-			<div className='md:flex md:h-[calc(100vh-6rem)] flex-1 min-h-0 w-full overflow-hidden  pb-20'>
-				{/* Desktop columns */}
-				<section className='hidden md:flex md:w-3/4 w-full bg-(--bg-primary) flex-col min-h-0'>
-					<div className='flex-1 overflow-y-auto p-4 no-scrollbar'>
-						<MyFullList movieList={movies} onSelect={(m) => setSelected(m)} />
+				<div className='md:flex flex-1 min-h-0'>
+					{/* Desktop columns */}
+					<section className='hidden md:flex md:w-3/4 w-full bg-(--bg-primary) flex-col min-h-0'>
+						<div className='flex-1 overflow-y-auto p-4 no-scrollbar'>
+							<MyFullList movieList={movies} onSelect={(m) => setSelected(m)} />
+						</div>
+					</section>
+
+					<section className='hidden md:flex md:w-1/4 w-full bg-(--bg-deep) overflow-y-auto rounded-tl-lg'>
+						<Feed refreshKey={feedRefreshKey} />
+					</section>
+
+					{/* Mobile panels */}
+					<div className='block md:hidden h-[calc(100vh-6rem)] overflow-hidden w-full'>
+						{activeTab === 'list' && (
+							<section className='w-full bg-(--bg-deep) flex flex-col h-full min-h-0'>
+								<div className='flex-1 overflow-y-auto p-4 no-scrollbar'>
+									<MyFullList
+										movieList={movies}
+										onSelect={(m) => setSelected(m)}
+									/>
+								</div>
+							</section>
+						)}
+						{activeTab === 'home' && (
+							<section className='w-full bg-(--bg-primary) p-4 h-full overflow-auto'>
+								<div className='max-w-xl mx-auto text-center'>
+									<h3 className='text-lg font-semibold text-(--text-primary)'>
+										{owner.username}
+									</h3>
+									<p className='text-(--text-muted)'>Public profile</p>
+								</div>
+							</section>
+						)}
+						{activeTab === 'feed' && (
+							<section className='w-full bg-(--bg-deep) p-4 h-full overflow-auto'>
+								<Feed />
+							</section>
+						)}
 					</div>
-				</section>
-
-				<section className='hidden md:flex md:w-1/4 w-full bg-(--bg-deep) overflow-y-auto rounded-tl-lg'>
-					<Feed refreshKey={feedRefreshKey} />
-				</section>
-
-				{/* Mobile panels */}
-				<div className='block md:hidden h-[calc(100vh-6rem)] overflow-hidden w-full'>
-					{activeTab === 'list' && (
-						<section className='w-full bg-(--bg-deep) flex flex-col h-full min-h-0'>
-							<div className='flex-1 overflow-y-auto p-4 no-scrollbar'>
-								<MyFullList
-									movieList={movies}
-									onSelect={(m) => setSelected(m)}
-								/>
-							</div>
-						</section>
-					)}
-					{activeTab === 'home' && (
-						<section className='w-full bg-(--bg-primary) p-4 h-full overflow-auto'>
-							<div className='max-w-xl mx-auto text-center'>
-								<h3 className='text-lg font-semibold text-(--text-primary)'>
-									{owner.username}
-								</h3>
-								<p className='text-(--text-muted)'>Public profile</p>
-							</div>
-						</section>
-					)}
-					{activeTab === 'feed' && (
-						<section className='w-full bg-(--bg-deep) p-4 h-full overflow-auto'>
-							<Feed />
-						</section>
-					)}
 				</div>
-			</div>
 
-			{selected && (
-				<MovieDetailsModal movie={selected} onClose={() => setSelected(null)} />
-			)}
+				{selected && (
+					<MovieDetailsModal
+						movie={selected}
+						onClose={() => setSelected(null)}
+					/>
+				)}
+			</div>
 		</div>
 	);
 }
