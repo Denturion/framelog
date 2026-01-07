@@ -119,56 +119,56 @@ export default function MyListPage() {
 
 				<div className='md:flex flex-1 min-h-0'>
 					{/* Desktop: two-column layout */}
-				<section className='hidden md:flex md:w-3/4 w-full bg-(--bg-primary) flex-col'>
-					<div className='max-w-xl mx-auto text-center pt-6'>
-						<h1 className='text-2xl font-semibold text-(--text-primary) pb-3'>
-							Your list
-						</h1>
+					<section className='hidden md:flex md:w-3/4 w-full bg-(--bg-primary) flex-col'>
+						<div className='max-w-xl mx-auto text-center pt-6'>
+							<h1 className='text-2xl font-semibold text-(--text-primary) pb-3'>
+								Your list
+							</h1>
+						</div>
+						<div className='flex-1 overflow-y-auto p-4 no-scrollbar'>
+							<MyFullList
+								movieList={movies}
+								onRemoveRequest={handleRequestRemove}
+								onSelect={handleOpenDetail}
+							/>
+						</div>
+					</section>
+					<section className='hidden md:flex md:w-1/4 w-full bg-(--bg-deep) overflow-y-auto rounded-tl-lg'>
+						<Feed />
+					</section>
+					<div className='block md:hidden h-[calc(100vh-6rem)] overflow-hidden w-full'>
+						{activeTab === 'list' && (
+							<section className='w-full bg-(--bg-deep) flex flex-col h-full min-h-0'>
+								<div className='flex-1 overflow-y-auto p-4 no-scrollbar'>
+									<MyFullList
+										movieList={movies}
+										onRemoveRequest={handleRequestRemove}
+										onSelect={handleOpenDetail}
+									/>
+								</div>
+							</section>
+						)}
+						{activeTab === 'home' && (
+							<section className='w-full bg-(--bg-primary) p-6 h-full overflow-auto'>
+								<div className='max-w-xl mx-auto text-center'>
+									<h1 className='text-2xl font-semibold text-(--text-primary)'>
+										Your list
+									</h1>
+									<p className='text-(--text-muted) mt-2'>
+										Manage and sort your collection.
+									</p>
+								</div>
+							</section>
+						)}
+						{activeTab === 'feed' && (
+							<section className='w-full bg-(--bg-deep) p-4 h-full overflow-auto'>
+								<Feed />
+							</section>
+						)}
 					</div>
-					<div className='flex-1 overflow-y-auto p-4 no-scrollbar'>
-						<MyFullList
-							movieList={movies}
-							onRemoveRequest={handleRequestRemove}
-							onSelect={handleOpenDetail}
-						/>
-					</div>
-				</section>
-				<section className='hidden md:flex md:w-1/4 w-full bg-(--bg-deep) overflow-y-auto rounded-tl-lg'>
-					<Feed />
-				</section>
-				<div className='block md:hidden h-[calc(100vh-6rem)] overflow-hidden w-full'>
-					{activeTab === 'list' && (
-						<section className='w-full bg-(--bg-deep) flex flex-col h-full min-h-0'>
-							<div className='flex-1 overflow-y-auto p-4 no-scrollbar'>
-								<MyFullList
-									movieList={movies}
-									onRemoveRequest={handleRequestRemove}
-									onSelect={handleOpenDetail}
-								/>
-							</div>
-						</section>
-					)}
-					{activeTab === 'home' && (
-						<section className='w-full bg-(--bg-primary) p-6 h-full overflow-auto'>
-							<div className='max-w-xl mx-auto text-center'>
-								<h1 className='text-2xl font-semibold text-(--text-primary)'>
-									Your list
-								</h1>
-								<p className='text-(--text-muted) mt-2'>
-									Manage and sort your collection.
-								</p>
-							</div>
-						</section>
-					)}
-					{activeTab === 'feed' && (
-						<section className='w-full bg-(--bg-deep) p-4 h-full overflow-auto'>
-							<Feed />
-						</section>
-					)}
 				</div>
-			</div>
-		</main>
-		<ConfirmModal
+			</main>
+			<ConfirmModal
 				open={confirmOpen}
 				title='Remove movie'
 				message='Do you really want to remove this movie?'
