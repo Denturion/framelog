@@ -109,24 +109,30 @@ export default function ProfileClient({ username }: { username: string }) {
 			{/* Responsive layout: desktop three columns, mobile tabs */}
 			<nav className='md:hidden flex bg-(--bg-deep) border-t border-b mb-2'>
 				<button
-					className={`flex-1 p-3 text-center ${
-						activeTab === 'list' ? 'font-semibold' : ''
+					className={`flex-1 p-3 text-center font-semibold ${
+						activeTab === 'list'
+							? ' text-(--accent-primary)'
+							: 'text-(--text-primary)'
 					}`}
 					onClick={() => setActiveTab('list')}
 				>
 					List
 				</button>
 				<button
-					className={`flex-1 p-3 text-center ${
-						activeTab === 'home' ? 'font-semibold' : ''
+					className={`flex-1 p-3 text-center font-semibold ${
+						activeTab === 'home'
+							? ' text-(--accent-primary)'
+							: 'text-(--text-primary)'
 					}`}
 					onClick={() => setActiveTab('home')}
 				>
 					About
 				</button>
 				<button
-					className={`flex-1 p-3 text-center ${
-						activeTab === 'feed' ? 'font-semibold' : ''
+					className={`flex-1 p-3 text-center font-semibold ${
+						activeTab === 'feed'
+							? ' text-(--accent-primary)'
+							: 'text-(--text-primary)'
 					}`}
 					onClick={() => setActiveTab('feed')}
 				>

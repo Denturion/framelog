@@ -85,24 +85,30 @@ export default function MyListPage() {
 			{/* Mobile tab bar */}
 			<nav className='md:hidden flex bg-(--bg-deep) border-t border-b'>
 				<button
-					className={`flex-1 p-3 text-center ${
-						activeTab === 'list' ? 'font-semibold' : ''
+					className={`flex-1 p-3 text-center font-semibold ${
+						activeTab === 'list'
+							? ' text-(--accent-primary)'
+							: 'text-(--text-primary)'
 					}`}
 					onClick={() => setActiveTab('list')}
 				>
-					List
+					My List
 				</button>
 				<button
-					className={`flex-1 p-3 text-center ${
-						activeTab === 'home' ? 'font-semibold' : ''
+					className={`flex-1 p-3 text-center font-semibold ${
+						activeTab === 'home'
+							? ' text-(--accent-primary)'
+							: 'text-(--text-primary)'
 					}`}
 					onClick={() => setActiveTab('home')}
 				>
 					Overview
 				</button>
 				<button
-					className={`flex-1 p-3 text-center ${
-						activeTab === 'feed' ? 'font-semibold' : ''
+					className={`flex-1 p-3 text-center font-semibold ${
+						activeTab === 'feed'
+							? ' text-(--accent-primary)'
+							: 'text-(--text-primary)'
 					}`}
 					onClick={() => setActiveTab('feed')}
 				>

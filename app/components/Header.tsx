@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { logOut } from '../services/logout';
+import { logout } from '../services/auth';
 import { searchMovies } from '../services/search';
 import { addMovie } from '../services/movies';
 import { getCurrentUser } from '../services/auth';
@@ -48,7 +48,7 @@ export default function Header({ pushMovie }: PushMovie) {
   ===================== */
 
 	const handleLogout = async () => {
-		const res = await logOut();
+		const res = await logout();
 		if (res.ok) router.replace('/');
 	};
 

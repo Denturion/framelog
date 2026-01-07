@@ -71,10 +71,8 @@ export default function Feed({ refreshKey }: { refreshKey?: number }) {
 	useEffect(() => {
 		let mounted = true;
 		let controller: AbortController | null = null;
-		let initial = true;
 
 		async function fetchFeed() {
-			if (initial) setLoading(true);
 			try {
 				if (controller) controller.abort();
 				controller = new AbortController();
@@ -84,13 +82,11 @@ export default function Feed({ refreshKey }: { refreshKey?: number }) {
 				if (err && err.name === 'AbortError') return;
 				console.error('Fetch feed error', err);
 			} finally {
-				if (initial) {
-					setLoading(false);
-					initial = false;
-				}
+				if (mounted) setLoading(false);
 			}
 		}
 
+		setLoading(true);
 		fetchFeed();
 		const intervalId = window.setInterval(fetchFeed, 60000);
 
