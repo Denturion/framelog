@@ -155,7 +155,7 @@ export default function ProfileClient({ username }: { username: string }) {
 				{/* Mobile panels */}
 				<div className='block md:hidden h-[calc(100vh-6rem)] overflow-hidden w-full'>
 					{activeTab === 'list' && (
-						<section className='w-full bg-(--bg-primary) flex flex-col h-full min-h-0'>
+						<section className='w-full bg-(--bg-deep) flex flex-col h-full min-h-0'>
 							<div className='flex-1 overflow-y-auto p-4 no-scrollbar'>
 								<MyFullList
 									movieList={movies}
