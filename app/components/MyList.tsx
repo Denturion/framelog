@@ -26,6 +26,7 @@ export default function MyList({
 								movie={m}
 								onRemoveRequest={onRemoveRequest}
 								onSelect={onSelect}
+								variant='dashboard'
 							/>
 						</li>
 					))}

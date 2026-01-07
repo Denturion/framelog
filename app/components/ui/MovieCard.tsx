@@ -4,7 +4,7 @@ type MovieCardProps = {
 	movie: IMovie;
 	onRemoveRequest?: (movieId: string) => void;
 	onSelect: (movie: IMovie) => void;
-	variant?: 'grid' | 'list';
+	variant?: 'grid' | 'list' | 'dashboard';
 };
 
 export default function MovieCard({
@@ -67,6 +67,53 @@ export default function MovieCard({
 						✕
 					</button>
 				)}
+			</div>
+		);
+	}
+
+	// Dashboard: compact horizontal card
+	if (variant === 'dashboard') {
+		return (
+			<div
+				onClick={() => onSelect(movie)}
+				className='
+				group
+				bg-(--bg-surface)
+				rounded-lg
+				p-3
+				flex
+				items-center
+				gap-3
+				cursor-pointer
+				hover:bg-(--bg-deep)
+				transition
+				
+			'
+			>
+				{/* Medium poster */}
+				<div className='w-30  aspect-2/3 shrink-0 overflow-hidden rounded'>
+					<img
+						src={poster_url}
+						alt={title}
+						className='w-full h-full object-cover'
+					/>
+				</div>
+
+				{/* Text */}
+				<div className='flex-1 min-w-0'>
+					<p className='text-sm font-medium text-(--text-primary) truncate'>
+						{title}
+					</p>
+					<p className='text-xs text-(--text-muted)'>{year}</p>
+
+					{rating ? (
+						<p className='text-xs text-(--accent-primary) mt-0.5'>
+							★ {rating}/10
+						</p>
+					) : (
+						<p className='text-xs text-(--text-muted) mt-0.5'>Not yet rated</p>
+					)}
+				</div>
 			</div>
 		);
 	}

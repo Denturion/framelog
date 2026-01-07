@@ -5,15 +5,16 @@ import MyFullList from '../components/MyFullList';
 import { IMovie } from '../interfaces/IMovieInterface';
 import { MovieDetailsModal } from '../components/ui/MovieDetailsModalFixed';
 import Feed from '@/app/components/Feed';
-
-type Owner = {
-	_id: string;
-	username: string;
-	is_followed?: boolean;
-};
+import {
+	getUserMovies,
+	UserProfile,
+	UserMoviesResponse,
+} from '../services/users';
+import { followUser, unfollowUser } from '../services/follow';
 
 export default function ProfileClient({ username }: { username: string }) {
-	const [owner, setOwner] = useState<Owner | null>(null);
+	// State
+	const [owner, setOwner] = useState<UserProfile | null>(null);
 	const [movies, setMovies] = useState<IMovie[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [processingFollow, setProcessingFollow] = useState(false);
@@ -21,71 +22,38 @@ export default function ProfileClient({ username }: { username: string }) {
 	const [activeTab, setActiveTab] = useState<'list' | 'home' | 'feed'>('list');
 	const [feedRefreshKey, setFeedRefreshKey] = useState(0);
 
-	async function fetchData() {
+	// Handlers
+	const handleFetchData = async () => {
 		setLoading(true);
 		try {
-			const res = await fetch(
-				`${process.env.NEXT_PUBLIC_API_URL}/api/users/${encodeURIComponent(
-					username
-				)}/movies`,
-				{
-					credentials: 'include',
-				}
-			);
-			if (res.status === 404) {
+			const data = await getUserMovies(username);
+			if (!data) {
 				setOwner(null);
 				setMovies([]);
-				return;
+			} else {
+				setOwner(data.owner);
+				setMovies(data.movies || []);
 			}
-			const data = await res.json();
-			setOwner(data.owner);
-			setMovies(data.movies || []);
+		} catch (err) {
+			console.error('Failed to fetch user data', err);
 		} finally {
 			setLoading(false);
 		}
-	}
+	};
 
-	useEffect(() => {
-		fetchData();
-	}, [username]);
-
-	async function toggleFollow() {
+	const handleToggleFollow = async () => {
 		if (!owner) return;
 		setProcessingFollow(true);
 		try {
 			if (owner.is_followed) {
-				await fetch(
-					`${process.env.NEXT_PUBLIC_API_URL}/api/follow/${encodeURIComponent(
-						username
-					)}`,
-					{
-						method: 'DELETE',
-						credentials: 'include',
-					}
-				);
+				await unfollowUser(username);
 			} else {
-				await fetch(
-					`${process.env.NEXT_PUBLIC_API_URL}/api/follow/${encodeURIComponent(
-						username
-					)}`,
-					{
-						method: 'POST',
-						credentials: 'include',
-					}
-				);
+				await followUser(username);
 			}
 
-			// Refresh owner.follow state
-			const res = await fetch(
-				`${process.env.NEXT_PUBLIC_API_URL}/api/users/${encodeURIComponent(
-					username
-				)}/movies`,
-				{
-					credentials: 'include',
-				}
-			);
-			if (res.ok) {
-				const data = await res.json();
+			// Refresh owner follow state
+			const data = await getUserMovies(username);
+			if (data) {
 				setOwner(data.owner);
 				setFeedRefreshKey((k) => k + 1);
 			}
@@ -94,8 +62,14 @@ export default function ProfileClient({ username }: { username: string }) {
 		} finally {
 			setProcessingFollow(false);
 		}
-	}
+	};
 
+	// Effects
+	useEffect(() => {
+		handleFetchData();
+	}, [username]);
+
+	// Render
 	if (loading) {
 		return <p className='text-(--text-muted)'>Loading...</p>;
 	}
@@ -124,7 +98,7 @@ export default function ProfileClient({ username }: { username: string }) {
 								? 'bg-(--bg-surface) text-(--text-muted)'
 								: 'bg-(--accent-primary)'
 						}`}
-						onClick={toggleFollow}
+						onClick={handleToggleFollow}
 						disabled={processingFollow}
 					>
 						{owner.is_followed ? 'Unfollow' : 'Follow'}

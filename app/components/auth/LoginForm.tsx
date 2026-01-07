@@ -2,46 +2,39 @@
 
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { login } from '../../services/auth';
 import Input from '../ui/Input';
 
 export default function LoginForm() {
+	// State
 	const router = useRouter();
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
 	const [error, setError] = useState('');
 
-	async function handleLogin(e: React.FormEvent) {
+	// Handlers
+	const handleLogin = async (e: React.FormEvent) => {
 		e.preventDefault();
 		setError('');
 
 		try {
-			const res = await fetch(
-				`${process.env.NEXT_PUBLIC_API_URL}/api/auth/login`,
-				{
-					method: 'POST',
-					headers: { 'Content-Type': 'application/json' },
-					credentials: 'include',
-					body: JSON.stringify({ username, password }),
-				}
-			);
+			const res = await login({ username, password });
 
 			if (res.ok) {
 				router.replace('/dashboard');
-			}
-
-			if (!res.ok) {
+			} else {
 				setError('Login failed');
-				return;
 			}
 		} catch (err) {
 			setError('Server not responding');
 		}
-	}
+	};
 
-	function registerRedirect() {
+	const handleRegisterRedirect = () => {
 		router.replace('/register');
-	}
+	};
 
+	// Render
 	return (
 		<>
 			<form onSubmit={handleLogin} className='flex flex-col gap-4'>
@@ -60,7 +53,7 @@ export default function LoginForm() {
 					value={password}
 					onChange={(e) => setPassword(e.target.value)}
 				/>
-				<div className=' flex flex-row justify-center gap-4'>
+				<div className='flex flex-row justify-center gap-4'>
 					<button className='w-full rounded-md bg-(--accent-primary) p-3 font-bold text-(--bg-primary)'>
 						Log in
 					</button>
@@ -70,7 +63,7 @@ export default function LoginForm() {
 			</form>
 			<div>
 				<button
-					onClick={registerRedirect}
+					onClick={handleRegisterRedirect}
 					className='w-full mt-3 rounded-md bg-(--accent-primary) p-3 font-bold text-(--bg-primary)'
 				>
 					Register

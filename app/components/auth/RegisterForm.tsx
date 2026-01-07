@@ -2,10 +2,12 @@
 
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { register } from '../../services/auth';
 import Input from '../ui/Input';
 import RegisterModal from '../ui/RegisterModal';
 
 export default function RegisterForm() {
+	// State
 	const router = useRouter();
 	const [username, setUsername] = useState('');
 	const [email, setEmail] = useState('');
@@ -14,33 +16,26 @@ export default function RegisterForm() {
 	const [showModal, setShowModal] = useState(false);
 	const [countdown, setCountdown] = useState(3);
 
-	async function handleRegister(e: React.FormEvent) {
+	// Handlers
+	const handleRegister = async (e: React.FormEvent) => {
 		e.preventDefault();
 		setError('');
 
 		try {
-			const res = await fetch(
-				`${process.env.NEXT_PUBLIC_API_URL}/api/auth/register`,
-				{
-					method: 'POST',
-					headers: { 'Content-Type': 'application/json' },
-					credentials: 'include',
-					body: JSON.stringify({ username, email, password }),
-				}
-			);
+			const res = await register({ username, email, password });
 
 			if (res.ok) {
 				setCountdown(3);
 				setShowModal(true);
+			} else {
+				setError('Registration failed');
 			}
-
-			if (!res.ok) setError('Registration failed');
-			return;
 		} catch (err) {
 			setError('Server not responding');
 		}
-	}
+	};
 
+	// Effects
 	useEffect(() => {
 		if (!showModal) return;
 
@@ -54,8 +49,9 @@ export default function RegisterForm() {
 		}, 1000);
 
 		return () => clearTimeout(timer);
-	}, [showModal, countdown]);
+	}, [showModal, countdown, router]);
 
+	// Render
 	return (
 		<>
 			<form onSubmit={handleRegister} className='flex flex-col gap-4'>

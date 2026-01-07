@@ -1,96 +1,84 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { IMovie } from '../interfaces/IMovieInterface';
-import Header from '../components/Header';
-import Feed from '../components/Feed';
-import { ConfirmModal } from '../components/ui/ConfirmModal';
-import { MovieDetailsModal } from '../components/ui/MovieDetailsModalFixed';
-import MyFullList from '../components/MyFullList';
+import { IMovie } from '../../interfaces/IMovieInterface';
+import Header from '../../components/Header';
+import Feed from '../../components/Feed';
+import { ConfirmModal } from '../../components/ui/ConfirmModal';
+import { MovieDetailsModal } from '../../components/ui/MovieDetailsModalFixed';
+import MyFullList from '../../components/MyFullList';
+import { getMyMovies, updateMovie, deleteMovie } from '../../services/movies';
 
 export default function MyListPage() {
+	// State
 	const [movies, setMovies] = useState<IMovie[]>([]);
 	const [activeTab, setActiveTab] = useState<'list' | 'home' | 'feed'>('list');
 	const [updateList, setUpdateList] = useState(false);
 	const [confirmOpen, setConfirmOpen] = useState(false);
 	const [movieToRemove, setMovieToRemove] = useState<string | null>(null);
-
 	const [selectedMovie, setSelectedMovie] = useState<IMovie | null>(null);
 
-	function openDetail(movie: IMovie) {
+	// Handlers
+	const handleOpenDetail = (movie: IMovie) => {
 		setSelectedMovie(movie);
-	}
+	};
 
-	function closeDetails() {
+	const handleCloseDetails = () => {
 		setSelectedMovie(null);
-	}
+	};
 
-	async function saveMovieChanges(updated: Partial<IMovie>) {
-		await fetch(
-			`${process.env.NEXT_PUBLIC_API_URL}/api/movies/${updated.movie_id}`,
-			{
-				method: 'PUT',
-				credentials: 'include',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify(updated),
-			}
-		);
-		notifyListChanged();
-		closeDetails();
-	}
+	const handleSaveMovieChanges = async (updated: Partial<IMovie>) => {
+		try {
+			if (!updated.movie_id) return;
+			await updateMovie(updated.movie_id, updated);
+			notifyListChanged();
+			handleCloseDetails();
+		} catch (err) {
+			console.error('Failed to save movie changes', err);
+		}
+	};
 
-	//Removal request
-	function requestRemove(movieId: string) {
+	const handleRequestRemove = (movieId: string) => {
 		setMovieToRemove(movieId);
 		setConfirmOpen(true);
-	}
+	};
 
-	async function confirmRemove() {
+	const handleConfirmRemove = async () => {
 		if (!movieToRemove) return;
-
-		await removeMovie(movieToRemove);
-		setConfirmOpen(false);
-		setMovieToRemove(null);
-	}
-
-	function cancelRemove() {
-		setConfirmOpen(false);
-		setMovieToRemove(null);
-	}
-
-	//Remove from list
-	async function removeMovie(movie_id: string) {
-		const res = await fetch(
-			`${process.env.NEXT_PUBLIC_API_URL}/api/movies/${movie_id}`,
-			{
-				method: 'DELETE',
-				credentials: 'include',
-			}
-		);
-
-		if (res.ok) {
+		try {
+			await deleteMovie(movieToRemove);
 			notifyListChanged();
+		} catch (err) {
+			console.error('Failed to remove movie', err);
+		} finally {
+			setConfirmOpen(false);
+			setMovieToRemove(null);
 		}
-		return;
-	}
+	};
 
-	//Notify that the list needs to be updated
-	function notifyListChanged() {
+	const handleCancelRemove = () => {
+		setConfirmOpen(false);
+		setMovieToRemove(null);
+	};
+
+	const notifyListChanged = () => {
 		setUpdateList((prev) => !prev);
-	}
+	};
 
+	// Effects
 	useEffect(() => {
 		async function fetchMovies() {
-			const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/movies`, {
-				credentials: 'include',
-			});
-			if (!res.ok) return;
-			const data = await res.json();
-			setMovies(data);
+			try {
+				const data = await getMyMovies();
+				setMovies(data);
+			} catch (err) {
+				console.error('Failed to fetch movies', err);
+			}
 		}
 		fetchMovies();
 	}, [updateList]);
 
+	// Render
 	return (
 		<>
 			<Header pushMovie={notifyListChanged} />
@@ -122,7 +110,7 @@ export default function MyListPage() {
 				</button>
 			</nav>
 			<main className='md:flex md:h-[calc(100vh-6rem)] w-full overflow-hidden'>
-				<section className=' md:flex md:w-3/4 w-full bg-(--bg-primary) flex flex-col'>
+				<section className='md:flex md:w-3/4 w-full bg-(--bg-primary) flex flex-col'>
 					<div className='max-w-xl mx-auto text-center'>
 						<h1 className='text-2xl font-semibold text-(--text-primary) pb-3'>
 							Your list
@@ -131,8 +119,8 @@ export default function MyListPage() {
 					<div className='flex-1 overflow-y-auto p-4 no-scrollbar'>
 						<MyFullList
 							movieList={movies}
-							onRemoveRequest={requestRemove}
-							onSelect={openDetail}
+							onRemoveRequest={handleRequestRemove}
+							onSelect={handleOpenDetail}
 						/>
 					</div>
 				</section>
@@ -147,8 +135,8 @@ export default function MyListPage() {
 							<div className='flex-1 overflow-y-auto p-4 no-scrollbar'>
 								<MyFullList
 									movieList={movies}
-									onRemoveRequest={requestRemove}
-									onSelect={openDetail}
+									onRemoveRequest={handleRequestRemove}
+									onSelect={handleOpenDetail}
 								/>
 							</div>
 						</section>
@@ -176,14 +164,14 @@ export default function MyListPage() {
 				open={confirmOpen}
 				title='Remove movie'
 				message='Do you really want to remove this movie?'
-				onConfirm={confirmRemove}
-				onCancel={cancelRemove}
+				onConfirm={handleConfirmRemove}
+				onCancel={handleCancelRemove}
 			/>
 			{selectedMovie && (
 				<MovieDetailsModal
 					movie={selectedMovie}
-					onClose={closeDetails}
-					onSave={saveMovieChanges}
+					onClose={handleCloseDetails}
+					onSave={handleSaveMovieChanges}
 				/>
 			)}
 		</>

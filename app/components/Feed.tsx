@@ -2,21 +2,14 @@
 
 import { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-
-type FeedItem = {
-	owner: { _id: string; username: string };
-	movie: {
-		movie_id: string;
-		title: string;
-		year: string;
-		poster_url?: string;
-		rating?: number | null;
-		note?: string;
-		date_added?: string;
-	};
-};
+import { getFeed, FeedItem } from '../services/feed';
+import { searchUsers } from '../services/follow';
 
 export default function Feed({ refreshKey }: { refreshKey?: number }) {
+	// State
+	const router = useRouter();
+	const inputRef = useRef<HTMLDivElement | null>(null);
+
 	const [items, setItems] = useState<FeedItem[]>([]);
 	const [loading, setLoading] = useState(false);
 	const [query, setQuery] = useState('');
@@ -26,10 +19,27 @@ export default function Feed({ refreshKey }: { refreshKey?: number }) {
 	const [suggestLoading, setSuggestLoading] = useState(false);
 	const [suggestError, setSuggestError] = useState<string | null>(null);
 	const [suggestVisible, setSuggestVisible] = useState(false);
-	const router = useRouter();
-	const inputRef = useRef<HTMLDivElement | null>(null);
 
-	// Debounced search
+	// Handlers
+	const handleSuggestionClick = (username: string) => {
+		router.push(`/users/${encodeURIComponent(username)}`);
+		setSuggestions([]);
+		setQuery('');
+		setSuggestVisible(false);
+	};
+
+	const handleOutsideClick = (e: MouseEvent) => {
+		if (!inputRef.current) return;
+		const clicked = e.target as Node;
+		if (!inputRef.current.contains(clicked)) {
+			setSuggestions([]);
+			setSuggestLoading(false);
+			setSuggestError(null);
+			setSuggestVisible(false);
+		}
+	};
+
+	// Effects
 	useEffect(() => {
 		if (!query.trim()) {
 			setSuggestions([]);
@@ -43,32 +53,9 @@ export default function Feed({ refreshKey }: { refreshKey?: number }) {
 			setSuggestError(null);
 			setSuggestVisible(true);
 			try {
-				const res = await fetch(
-					`${
-						process.env.NEXT_PUBLIC_API_URL
-					}/api/follow/search/users?q=${encodeURIComponent(query)}&limit=8`,
-					{
-						credentials: 'include',
-					}
-				);
-				if (!res.ok) {
-					const text = await res.text().catch(() => '');
-					const msg = `Search failed: ${res.status} ${res.statusText} ${text}`;
-					console.error(msg);
-					setSuggestions([]);
-					setSuggestError(msg);
-					return;
-				}
-				const data = await res.json();
-				if (!Array.isArray(data)) {
-					const msg = 'Search returned unexpected data';
-					console.error(msg, data);
-					setSuggestions([]);
-					setSuggestError(msg);
-				} else {
-					setSuggestions(data);
-					setSuggestError(null);
-				}
+				const data = await searchUsers(query, 8);
+				setSuggestions(data);
+				setSuggestError(null);
 				setSuggestLoading(false);
 			} catch (err) {
 				console.error('Search error', err);
@@ -91,17 +78,7 @@ export default function Feed({ refreshKey }: { refreshKey?: number }) {
 			try {
 				if (controller) controller.abort();
 				controller = new AbortController();
-				const res = await fetch(
-					`${process.env.NEXT_PUBLIC_API_URL}/api/feed?limit=20`,
-					{
-						credentials: 'include',
-						signal: controller.signal,
-					}
-				);
-				if (!res.ok) {
-					return;
-				}
-				const data = await res.json();
+				const data = await getFeed(20, controller.signal);
 				if (mounted) setItems(data);
 			} catch (err: any) {
 				if (err && err.name === 'AbortError') return;
@@ -124,23 +101,12 @@ export default function Feed({ refreshKey }: { refreshKey?: number }) {
 		};
 	}, [refreshKey]);
 
-	// Close suggestions when clicking outside the input/dropdown
 	useEffect(() => {
-		function handleClick(e: MouseEvent) {
-			if (!inputRef.current) return;
-			const clicked = e.target as Node;
-			if (!inputRef.current.contains(clicked)) {
-				setSuggestions([]);
-				setSuggestLoading(false);
-				setSuggestError(null);
-				setSuggestVisible(false);
-			}
-		}
-
-		document.addEventListener('mousedown', handleClick);
-		return () => document.removeEventListener('mousedown', handleClick);
+		document.addEventListener('mousedown', handleOutsideClick);
+		return () => document.removeEventListener('mousedown', handleOutsideClick);
 	}, []);
 
+	// Render
 	if (loading) return <div className='p-4'>Loading feed...</div>;
 
 	return (
@@ -169,14 +135,7 @@ export default function Feed({ refreshKey }: { refreshKey?: number }) {
 									{suggestions.map((s) => (
 										<li key={s._id}>
 											<button
-												onClick={() => {
-													router.push(
-														`/users/${encodeURIComponent(s.username)}`
-													);
-													setSuggestions([]);
-													setQuery('');
-													setSuggestVisible(false);
-												}}
+												onClick={() => handleSuggestionClick(s.username)}
 												className='w-full text-left p-2 hover:bg-(--bg-deep)'
 											>
 												{s.username}
@@ -225,7 +184,7 @@ export default function Feed({ refreshKey }: { refreshKey?: number }) {
 							>
 								{/* Avatar */}
 								<button
-									className='w-9 h-9 rounded-full bg-(--accent-primary) text-white flex items-center justify-center font-semibold hover:opacity-90 transition'
+									className='w-9 h-9 rounded-full bg-(--accent-primary) text-white flex items-center justify-center font-semibold hover:opacity-90 transition cursor-pointer'
 									onClick={() => router.push(`/users/${it.owner.username}`)}
 								>
 									{it.owner.username.charAt(0).toUpperCase()}

@@ -26,7 +26,7 @@ export function MovieDetailsModal({
 
 	return (
 		<div className='fixed inset-0 z-200 bg-black/60 flex items-center justify-center'>
-			<div className='bg-(--bg-surface) rounded-xl w-[420px] p-6'>
+			<div className='bg-(--bg-surface) rounded-xl w-[720px] p-6'>
 				{/* Header */}
 				<div className='flex justify-between items-start mb-4'>
 					<h3 className='text-xl font-semibold text-(--text-primary)'>
@@ -83,28 +83,6 @@ export function MovieDetailsModal({
 						/>
 					</div>{' '}
 					{/* Note */}
-					<div>
-						<label className='block text-sm text-(--text-muted) mb-1'>
-							Note
-						</label>
-						<textarea
-							rows={4}
-							value={note}
-							onChange={(e) => setNote(e.target.value)}
-							placeholder='What did you think?'
-							className='
-                w-full
-                bg-(--bg-deep)
-                text-(--text-primary)
-                rounded-lg
-                p-3
-                resize-none
-                focus:outline-none
-                focus:ring-2
-                focus:ring-(--accent-primary)
-              '
-						/>
-					</div>
 				</div>
 
 				{/* Actions */}
