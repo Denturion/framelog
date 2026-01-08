@@ -217,8 +217,8 @@ export default function Header({ pushMovie }: PushMovie) {
 
 				{/* Search results */}
 				{results.length > 0 && isResultsOpen && (
-					<div className='absolute top-full left-0 w-full bg-(--bg-deep) p-2 shadow-xl z-50'>
-						<div className='flex no-scrollbar gap-2 justify-center'>
+					<div className='absolute top-full left-0 right-0 bg-(--bg-deep) p-4 shadow-xl z-50 max-w-full'>
+						<div className='flex overflow-x-auto no-scrollbar gap-2 md:gap-3 md:justify-center pb-2'>
 							{results.map((r, idx) => (
 								<button
 									key={r.imdbID}
@@ -233,7 +233,7 @@ export default function Header({ pushMovie }: PushMovie) {
 									<img
 										src={r.Poster !== 'N/A' ? r.Poster : '/placeholder.png'}
 										alt={r.Title}
-										className='w-24 h-36 object-cover rounded-lg'
+										className='w-20 h-30 md:w-24 md:h-36 object-cover rounded-lg'
 									/>
 								</button>
 							))}
