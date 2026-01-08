@@ -17,8 +17,12 @@ export default function AuthGate({
 	const [ready, setReady] = useState(false);
 
 	useEffect(() => {
+		let active = true;
+
 		isAuthenticated()
 			.then((ok) => {
+				if (!active) return;
+
 				if (blockWhenAuthenticated && ok) {
 					router.replace(redirectTo);
 				} else if (!blockWhenAuthenticated && !ok) {
@@ -28,12 +32,13 @@ export default function AuthGate({
 				}
 			})
 			.catch(() => {
-				// ❗ viktig: låt gate avslutas även vid fetch-fel
-				if (!blockWhenAuthenticated) {
-					router.replace(redirectTo);
-				}
+				if (!active) return;
 				setReady(true);
 			});
+
+		return () => {
+			active = false;
+		};
 	}, [router, redirectTo, blockWhenAuthenticated]);
 
 	if (!ready) {
