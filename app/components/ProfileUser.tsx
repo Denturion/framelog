@@ -89,7 +89,7 @@ export default function ProfileClient({ username }: { username: string }) {
 						<h2 className='text-xl font-semibold text-(--text-primary)'>
 							{owner.username}
 						</h2>
-						<p className='text-(--text-muted) text-sm'>Public profile</p>
+						<p className='text-(--text-muted) text-sm'>Profile</p>
 					</div>
 
 					<button
@@ -171,7 +171,7 @@ export default function ProfileClient({ username }: { username: string }) {
 									<h3 className='text-lg font-semibold text-(--text-primary)'>
 										{owner.username}
 									</h3>
-									<p className='text-(--text-muted)'>Public profile</p>
+									<p className='text-(--text-muted)'>Profile</p>
 								</div>
 							</section>
 						)}
