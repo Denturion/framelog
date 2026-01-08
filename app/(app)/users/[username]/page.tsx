@@ -11,7 +11,7 @@ export default async function UserPage({ params }: Props) {
 	return (
 		<>
 			<Header />
-			<main className='w-full p-6 bg-(--bg-primary)'>
+			<main className='w-full bg-(--bg-primary)'>
 				<ProfileUser username={username} />
 			</main>
 		</>
