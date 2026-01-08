@@ -25,20 +25,20 @@ export function MovieDetailsModal({
 	}
 
 	return (
-		<div className='fixed inset-0 z-200 bg-black/60 flex items-center justify-center'>
-			<div className='bg-(--bg-surface) rounded-xl overflow-hidden md:w-[800px] sm:w-80'>
-				<div className='flex flex-col md:flex-row gap-6'>
+		<div className='fixed inset-0 z-200 bg-black/60 flex items-center justify-center p-6 md:p-4'>
+			<div className='bg-(--bg-surface) rounded-xl overflow-hidden w-full max-w-sm md:max-w-2xl max-h-[85vh] flex flex-col'>
+				<div className='flex flex-col md:flex-row gap-4 md:gap-6 overflow-y-auto no-scrollbar'>
 					<div className='w-full md:w-1/3 shrink-0'>
 						<img
 							src={movie.poster_url}
 							alt={movie.title}
-							className='w-full  object-cover'
+							className='w-full h-auto md:h-full object-cover'
 						/>
 					</div>
-					<div className='flex-1 p-6'>
+					<div className='flex-1 p-4 md:p-6'>
 						{/* Header */}
-						<div className='flex justify-between items-start '>
-							<h3 className='text-xl font-semibold text-(--text-primary)'>
+						<div className='flex justify-between items-start mb-4'>
+							<h3 className='text-lg md:text-xl font-semibold text-(--text-primary)'>
 								{movie.title}
 								<span className='text-(--text-muted) text-sm ml-2'>
 									({movie.year})
@@ -47,7 +47,7 @@ export function MovieDetailsModal({
 
 							<button
 								onClick={onClose}
-								className='text-(--text-muted) hover:text-(--text-primary)'
+								className='text-(--text-muted) hover:text-(--text-primary) ml-2'
 								aria-label='Close'
 							>
 								✕
@@ -55,7 +55,7 @@ export function MovieDetailsModal({
 						</div>
 
 						{/* Content */}
-						<div className='space-y-4'>
+						<div className='space-y-3 md:space-y-4'>
 							{/* Rating */}
 							<div>
 								<label className='block text-sm text-(--text-muted) mb-1'>
@@ -86,7 +86,7 @@ export function MovieDetailsModal({
 									Note
 								</label>
 								<textarea
-									rows={4}
+									rows={3}
 									value={note}
 									onChange={(e) => setNote(e.target.value)}
 									placeholder='What did you think?'
@@ -97,7 +97,7 @@ export function MovieDetailsModal({
 						</div>
 
 						{/* Actions */}
-						<div className='flex justify-end gap-3 mt-6'>
+						<div className='flex justify-end gap-3 mt-4 md:mt-6'>
 							<button
 								onClick={onClose}
 								className='text-(--text-muted) hover:text-(--text-primary)'
