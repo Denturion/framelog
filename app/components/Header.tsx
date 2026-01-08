@@ -22,11 +22,6 @@ type OmdbMovie = {
 	Poster: string;
 };
 
-/**
- * ADD payload
- * ❌ ingen _id här
- */
-
 type PushMovie = {
 	pushMovie?: () => void;
 };
