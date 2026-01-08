@@ -70,5 +70,5 @@ button {
 
 body {
 	overflow: hidden;
-	background: #23233b;
+	background: var(--bg-primary);
 }
