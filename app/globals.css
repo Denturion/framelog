@@ -1,0 +1,74 @@
+@import 'tailwindcss';
+
+:root {
+	--background: #ffffff;
+	--foreground: #171717;
+}
+
+/* @theme inline {
+	--color-background: var(--background);
+	--color-foreground: var(--foreground);
+	--font-sans: var(--font-geist-sans);
+	--font-mono: var(--font-geist-mono);
+} */
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		/* --bg-primary: #23233b;
+		--bg-surface: #2c2c46;
+		--bg-deep: #1b1b2e;
+
+		--accent-primary: #0fabfc;
+		--accent-hover: #36bfff;
+
+		--text-primary: #e6e7f0;
+		--text-secondary: #a7a9c2;
+		--text-muted: #7a7d9a; */
+
+		--bg-primary: #1f1f2b;
+		--bg-surface: #2a2a3a;
+		--bg-deep: #171723;
+
+		--accent-primary: #f5a524; /* varm amber */
+		--accent-hover: #f7b955;
+
+		--text-primary: #f1f1f5;
+		--text-secondary: #b8b9c9;
+		--text-muted: #8c8fa8;
+
+		/* ICE BLUE */
+		/* --bg-primary: #1e2127;
+		--bg-surface: #2a2e36;
+		--bg-deep: #16181d;
+
+		--accent-primary: #7dd3fc; 
+		--accent-hover: #a5e3ff;
+
+		--text-primary: #f4f6f8;
+		--text-secondary: #c2c7cf;
+		--text-muted: #8b9099; */
+	}
+}
+
+body {
+	background: var(--background);
+	color: var(--foreground);
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+button {
+	cursor: pointer;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+	display: none;
+}
+.no-scrollbar {
+	-ms-overflow-style: none;
+	scrollbar-width: none;
+}
+
+body {
+	overflow: hidden;
+	background: var(--bg-primary);
+}
