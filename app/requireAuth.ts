@@ -1,5 +1,5 @@
 export async function requireAuth() {
-	const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/protected`, {
+	const res = await fetch('/api/protected', {
 		credentials: 'include',
 	});
 

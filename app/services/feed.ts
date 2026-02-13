@@ -17,13 +17,10 @@ export interface FeedItem {
 }
 
 export async function getFeed(limit: number = 20, signal?: AbortSignal) {
-	const res = await fetch(
-		`${process.env.NEXT_PUBLIC_API_URL}/api/feed?limit=${limit}`,
-		{
-			credentials: 'include',
-			signal,
-		}
-	);
+	const res = await fetch(`/api/feed?limit=${limit}`, {
+		credentials: 'include',
+		signal,
+	});
 	if (!res.ok) {
 		throw new Error(`Failed to fetch feed: ${res.statusText}`);
 	}

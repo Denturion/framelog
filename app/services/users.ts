@@ -17,14 +17,9 @@ export interface UserMoviesResponse {
 }
 
 export async function getUserMovies(username: string) {
-	const res = await fetch(
-		`${process.env.NEXT_PUBLIC_API_URL}/api/users/${encodeURIComponent(
-			username
-		)}/movies`,
-		{
-			credentials: 'include',
-		}
-	);
+	const res = await fetch(`/api/users/${encodeURIComponent(username)}/movies`, {
+		credentials: 'include',
+	});
 	if (res.status === 404) {
 		return null;
 	}
@@ -35,14 +30,9 @@ export async function getUserMovies(username: string) {
 }
 
 export async function getCurrentUserProfile(userId: string) {
-	const res = await fetch(
-		`${process.env.NEXT_PUBLIC_API_URL}/api/users/${encodeURIComponent(
-			userId
-		)}/movies`,
-		{
-			credentials: 'include',
-		}
-	);
+	const res = await fetch(`/api/users/${encodeURIComponent(userId)}/movies`, {
+		credentials: 'include',
+	});
 	if (!res.ok) {
 		return null;
 	}

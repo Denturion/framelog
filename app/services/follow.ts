@@ -4,15 +4,10 @@
  */
 
 export async function followUser(username: string) {
-	const res = await fetch(
-		`${process.env.NEXT_PUBLIC_API_URL}/api/follow/${encodeURIComponent(
-			username
-		)}`,
-		{
-			method: 'POST',
-			credentials: 'include',
-		}
-	);
+	const res = await fetch(`/api/follow/${encodeURIComponent(username)}`, {
+		method: 'POST',
+		credentials: 'include',
+	});
 	if (!res.ok) {
 		throw new Error(`Failed to follow user: ${res.statusText}`);
 	}
@@ -20,15 +15,10 @@ export async function followUser(username: string) {
 }
 
 export async function unfollowUser(username: string) {
-	const res = await fetch(
-		`${process.env.NEXT_PUBLIC_API_URL}/api/follow/${encodeURIComponent(
-			username
-		)}`,
-		{
-			method: 'DELETE',
-			credentials: 'include',
-		}
-	);
+	const res = await fetch(`/api/follow/${encodeURIComponent(username)}`, {
+		method: 'DELETE',
+		credentials: 'include',
+	});
 	if (!res.ok) {
 		throw new Error(`Failed to unfollow user: ${res.statusText}`);
 	}
@@ -41,9 +31,7 @@ export async function searchUsers(
 	signal?: AbortSignal
 ) {
 	const res = await fetch(
-		`${
-			process.env.NEXT_PUBLIC_API_URL
-		}/api/follow/search/users?q=${encodeURIComponent(query)}&limit=${limit}`,
+		`/api/follow/search/users?q=${encodeURIComponent(query)}&limit=${limit}`,
 		{
 			credentials: 'include',
 			signal,

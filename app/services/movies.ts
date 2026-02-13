@@ -18,7 +18,7 @@ export interface UpdateMoviePayload {
 }
 
 export async function getMyMovies() {
-	const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/movies`, {
+	const res = await fetch('/api/movies', {
 		credentials: 'include',
 	});
 	if (!res.ok) {
@@ -28,7 +28,7 @@ export async function getMyMovies() {
 }
 
 export async function addMovie(movie: AddMoviePayload) {
-	const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/movies`, {
+	const res = await fetch('/api/movies', {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json' },
 		credentials: 'include',
@@ -44,15 +44,12 @@ export async function updateMovie(
 	_id: string,
 	updates: Partial<UpdateMoviePayload>
 ) {
-	const res = await fetch(
-		`${process.env.NEXT_PUBLIC_API_URL}/api/movies/${_id}`,
-		{
-			method: 'PUT',
-			credentials: 'include',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify(updates),
-		}
-	);
+	const res = await fetch(`/api/movies/${_id}`, {
+		method: 'PUT',
+		credentials: 'include',
+		headers: { 'Content-Type': 'application/json' },
+		body: JSON.stringify(updates),
+	});
 	if (!res.ok) {
 		throw new Error(`Failed to update movie: ${res.statusText}`);
 	}
@@ -60,13 +57,10 @@ export async function updateMovie(
 }
 
 export async function deleteMovie(_id: string) {
-	const res = await fetch(
-		`${process.env.NEXT_PUBLIC_API_URL}/api/movies/${_id}`,
-		{
-			method: 'DELETE',
-			credentials: 'include',
-		}
-	);
+	const res = await fetch(`/api/movies/${_id}`, {
+		method: 'DELETE',
+		credentials: 'include',
+	});
 	if (!res.ok) {
 		throw new Error(`Failed to delete movie: ${res.statusText}`);
 	}

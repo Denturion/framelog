@@ -19,7 +19,7 @@ export interface CurrentUser {
 }
 
 export async function login(credentials: LoginCredentials) {
-	return fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/login`, {
+	return fetch('/api/auth/login', {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json' },
 		credentials: 'include',
@@ -28,7 +28,7 @@ export async function login(credentials: LoginCredentials) {
 }
 
 export async function register(credentials: RegisterCredentials) {
-	return fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/register`, {
+	return fetch('/api/auth/register', {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json' },
 		credentials: 'include',
@@ -37,14 +37,14 @@ export async function register(credentials: RegisterCredentials) {
 }
 
 export async function logout() {
-	return fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/logout`, {
+	return fetch('/api/auth/logout', {
 		method: 'POST',
 		credentials: 'include',
 	});
 }
 
 export async function getCurrentUser() {
-	const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/protected`, {
+	const res = await fetch('/api/protected', {
 		credentials: 'include',
 	});
 	if (!res.ok) {
