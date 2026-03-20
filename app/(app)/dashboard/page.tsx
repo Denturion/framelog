@@ -313,6 +313,7 @@ function DashboardCenter({
 	onGoToFullList: () => void;
 	onOpenFollowModal: (type: 'followers' | 'following') => void;
 }) {
+	const router = useRouter();
 	const ratedMovies = movies.filter((m) => m.rating != null);
 	const avgRating =
 		ratedMovies.length > 0
@@ -391,15 +392,16 @@ function DashboardCenter({
 					<h3 className='text-sm font-semibold text-(--text-primary) mb-3'>Recent Followers</h3>
 					<div className='flex flex-wrap gap-2'>
 						{profile.followers.slice(0, 6).map((f) => (
-							<span
+							<button
 								key={f._id}
-								className='inline-flex items-center gap-1.5 bg-(--bg-surface) rounded-full px-3 py-1 text-sm'
+								onClick={() => router.push(`/users/${encodeURIComponent(f.username)}`)}
+								className='inline-flex items-center gap-1.5 bg-(--bg-surface) rounded-full px-3 py-1 text-sm hover:bg-(--accent-primary) hover:text-black transition cursor-pointer'
 							>
 								<span className='w-5 h-5 rounded-full bg-(--accent-primary) text-white flex items-center justify-center text-xs font-semibold'>
 									{f.username.charAt(0).toUpperCase()}
 								</span>
-								<span className='text-(--text-primary)'>{f.username}</span>
-							</span>
+								<span>{f.username}</span>
+							</button>
 						))}
 					</div>
 				</div>
