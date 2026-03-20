@@ -30,6 +30,13 @@ export class MovieRepository {
 			throw new Error('User not found');
 		}
 
+		const alreadyExists = user.movies.some(
+			(m) => m.movie_id === movieData.movie_id
+		);
+		if (alreadyExists) {
+			throw new Error('Movie already in your list');
+		}
+
 		user.movies.push({
 			movie_id: movieData.movie_id,
 			title: movieData.title,

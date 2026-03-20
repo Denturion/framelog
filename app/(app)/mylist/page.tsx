@@ -5,7 +5,7 @@ import { IMovie } from '../../interfaces/IMovieInterface';
 import Header from '../../components/Header';
 import Feed from '../../components/Feed';
 import { ConfirmModal } from '../../components/ui/ConfirmModal';
-import { MovieDetailsModal } from '../../components/ui/MovieDetailsModalFixed';
+import { MovieDetailsModal } from '../../components/ui/MovieDetailsModal';
 import MyFullList from '../../components/MyFullList';
 import { getMyMovies, updateMovie, deleteMovie } from '../../services/movies';
 

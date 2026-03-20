@@ -17,7 +17,9 @@ export default function MyList({
 	return (
 		<div className='p-4 text-(--text-primary)'>
 			{movieList.length === 0 ? (
-				<p className='text-(--text-muted) text-sm '>Your list is empty.</p>
+				<p className='text-(--text-muted) text-sm'>
+					Your list is empty. Use the search bar above to find and add movies!
+				</p>
 			) : (
 				<ul className='space-y-3'>
 					{[...movieList]

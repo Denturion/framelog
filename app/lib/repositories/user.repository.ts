@@ -122,6 +122,36 @@ export class UserRepository {
 		return user?.users_followed || [];
 	}
 
+	async getFollowersList(
+		userId: string
+	): Promise<Array<{ _id: string; username: string }>> {
+		await connectDB();
+
+		const user = await User.findById(userId).select('followers');
+		if (!user || user.followers.length === 0) return [];
+
+		const followers = await User.find({
+			_id: { $in: user.followers },
+		}).select('username');
+
+		return followers.map((u) => ({ _id: u._id.toString(), username: u.username }));
+	}
+
+	async getFollowingList(
+		userId: string
+	): Promise<Array<{ _id: string; username: string }>> {
+		await connectDB();
+
+		const user = await User.findById(userId).select('users_followed');
+		if (!user || user.users_followed.length === 0) return [];
+
+		const following = await User.find({
+			_id: { $in: user.users_followed },
+		}).select('username');
+
+		return following.map((u) => ({ _id: u._id.toString(), username: u.username }));
+	}
+
 	async isFollowing(
 		currentUserId: string,
 		targetUserId: Types.ObjectId

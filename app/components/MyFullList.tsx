@@ -16,15 +16,23 @@ export default function MyFullList({
 	onSelect,
 }: Props) {
 	const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+	const [searchQuery, setSearchQuery] = useState('');
 
 	const [sortMode, setSortMode] = useState<
 		'date_desc' | 'date_asc' | 'title_asc' | 'title_desc'
 	>('date_desc');
 
-	const sortedMovies = useMemo(() => {
-		const copy = movieList.slice();
+	const filteredAndSorted = useMemo(() => {
+		let copy = movieList.slice();
+
+		// Filter by search query
+		if (searchQuery.trim()) {
+			const q = searchQuery.toLowerCase();
+			copy = copy.filter((m) => m.title.toLowerCase().includes(q));
+		}
+
+		// Sort
 		switch (sortMode) {
-			// Date sorting assumes date_added is an ISO string; localeCompare works for that format
 			case 'date_desc':
 				return copy.sort((a, b) =>
 					(b.date_added || '').localeCompare(a.date_added || '')
@@ -33,7 +41,6 @@ export default function MyFullList({
 				return copy.sort((a, b) =>
 					(a.date_added || '').localeCompare(b.date_added || '')
 				);
-			// Title sorting uses localeCompare for correct alphabetic order
 			case 'title_asc':
 				return copy.sort((a, b) => a.title.localeCompare(b.title));
 			case 'title_desc':
@@ -41,19 +48,27 @@ export default function MyFullList({
 			default:
 				return copy;
 		}
-	}, [movieList, sortMode]);
+	}, [movieList, sortMode, searchQuery]);
+
+	const hasMovies = movieList.length > 0;
+	const noResults = hasMovies && filteredAndSorted.length === 0;
 
 	return (
 		<div className='flex flex-col h-full text-(--text-primary)'>
 			{/* Toolbar */}
-			<div
-				className='
-			sticky top-0 z-10
-			bg-(--bg-primary)
-			p-4
-			shadow-sm
-		'
-			>
+			<div className='sticky top-0 z-10 bg-(--bg-primary) p-4 shadow-sm space-y-3'>
+				{/* Search filter */}
+				{hasMovies && (
+					<input
+						value={searchQuery}
+						onChange={(e) => setSearchQuery(e.target.value)}
+						type='text'
+						placeholder='Filter movies...'
+						className='w-full bg-(--bg-deep) border border-gray-800 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-(--accent-primary) text-(--text-primary)'
+						aria-label='Filter movies'
+					/>
+				)}
+
 				<div className='flex items-center justify-between'>
 					<div className='flex items-center gap-2'>
 						<label className='text-xs text-(--text-muted)'>Sort:</label>
@@ -92,8 +107,14 @@ export default function MyFullList({
 
 			{/* Scrollable list */}
 			<div className='flex-1 overflow-y-auto p-4 no-scrollbar'>
-				{sortedMovies.length === 0 ? (
-					<p className='text-(--text-muted) text-sm'>Your list is empty.</p>
+				{!hasMovies ? (
+					<p className='text-(--text-muted) text-sm'>
+						No movies yet. Use the search bar above to find and add movies!
+					</p>
+				) : noResults ? (
+					<p className='text-(--text-muted) text-sm'>
+						No movies match &quot;{searchQuery}&quot;
+					</p>
 				) : (
 					<ul
 						className={
@@ -102,7 +123,7 @@ export default function MyFullList({
 								: 'flex flex-col gap-2'
 						}
 					>
-						{sortedMovies.map((m, index) => (
+						{filteredAndSorted.map((m, index) => (
 							<li
 								key={`${m._id}-${index}`}
 								className={

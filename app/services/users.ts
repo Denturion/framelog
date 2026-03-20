@@ -5,10 +5,21 @@
 
 import { IMovie } from '../interfaces/IMovieInterface';
 
+export interface FollowUser {
+	_id: string;
+	username: string;
+}
+
 export interface UserProfile {
 	_id: string;
 	username: string;
+	is_self?: boolean;
 	is_followed?: boolean;
+	followers_count: number;
+	following_count: number;
+	followers: FollowUser[];
+	following: FollowUser[];
+	created_at: string;
 }
 
 export interface UserMoviesResponse {

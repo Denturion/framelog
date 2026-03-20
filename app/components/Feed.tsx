@@ -41,7 +41,7 @@ export default function Feed({ refreshKey }: { refreshKey?: number }) {
 
 	// Effects
 	useEffect(() => {
-		if (!query.trim()) {
+		if (!query.trim() || query.trim().length < 3) {
 			setSuggestions([]);
 			setSuggestError(null);
 			setSuggestVisible(false);
@@ -144,8 +144,14 @@ export default function Feed({ refreshKey }: { refreshKey?: number }) {
 					)}
 				</div>
 
+				{query.trim().length > 0 && query.trim().length < 3 && (
+						<div className='p-2 text-sm text-(--text-muted)'>
+							Type at least 3 characters to search
+						</div>
+					)}
+
 				{suggestVisible &&
-					query.trim() &&
+					query.trim().length >= 3 &&
 					!suggestLoading &&
 					suggestions.length === 0 &&
 					!suggestError && (
@@ -166,8 +172,8 @@ export default function Feed({ refreshKey }: { refreshKey?: number }) {
 			{/* Scrollable feed list */}
 			<div className='flex-1 min-h-0 overflow-y-auto pb-10 no-scrollbar pr-2'>
 				{items.length === 0 ? (
-					<div className='p-4 text-(--text-muted)'>
-						No recent activity from people you follow.
+					<div className='p-4 text-(--text-muted) text-sm'>
+						No recent activity yet. Search for users above and follow them to see what they&apos;re watching!
 					</div>
 				) : (
 					<ul className='flex flex-col gap-3'>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, RefObject } from 'react';
 import { useRouter } from 'next/navigation';
 import { logout } from '../services/auth';
 import { searchMovies } from '../services/search';
@@ -22,11 +22,12 @@ type OmdbMovie = {
 	Poster: string;
 };
 
-type PushMovie = {
+type HeaderProps = {
 	pushMovie?: () => void;
+	searchRef?: RefObject<HTMLDivElement | null>;
 };
 
-export default function Header({ pushMovie }: PushMovie) {
+export default function Header({ pushMovie, searchRef }: HeaderProps) {
 	const router = useRouter();
 	const headerRef = useRef<HTMLDivElement | null>(null);
 
@@ -56,13 +57,19 @@ export default function Header({ pushMovie }: PushMovie) {
 				poster_url: r.Poster,
 			};
 
-			await addMovie(payload); // ✅ ingen _id skickas
+			await addMovie(payload);
 			pushMovie?.();
 
 			setToastMsg('Movie added to your list');
 			setTimeout(() => setToastMsg(null), 3000);
-		} catch (err) {
-			console.error('Failed to add movie', err);
+		} catch (err: any) {
+			const msg = err?.message || '';
+			if (msg.includes('409')) {
+				setToastMsg('Movie is already in your list');
+			} else {
+				setToastMsg('Failed to add movie');
+			}
+			setTimeout(() => setToastMsg(null), 3000);
 		}
 	};
 
@@ -175,7 +182,7 @@ export default function Header({ pushMovie }: PushMovie) {
 				</div>
 
 				{/* Search */}
-				<div className='flex-1 flex justify-center px-2'>
+				<div ref={searchRef} className='flex-1 flex justify-center px-2'>
 					<input
 						onFocus={() => {
 							if (results.length > 0) setIsResultsOpen(true);
@@ -190,23 +197,27 @@ export default function Header({ pushMovie }: PushMovie) {
 				</div>
 
 				{/* Profile + Logout */}
-				<div className='flex items-center gap-3 md:gap-6 ml-2'>
+				<div className='flex items-center gap-2 md:gap-3 ml-2'>
 					<button
-						onClick={() => router.push('/mylist')}
-						className='flex items-center justify-center w-12 h-12 rounded-full bg-(--bg-deep) hover:bg-(--bg-surface) hover:text-(--accent-primary) transition cursor-pointer'
+						onClick={() =>
+							router.push(
+								username
+									? `/users/${encodeURIComponent(username)}`
+									: '/mylist'
+							)
+						}
+						className='px-3 py-1.5 rounded-full text-sm text-(--text-primary) bg-(--bg-deep) hover:bg-(--bg-surface) hover:text-(--accent-primary) transition cursor-pointer'
 						aria-label='Open profile'
-						title={username ?? 'Profile'}
 					>
-						<span className='font-semibold'>{userInitial}</span>
+						Profile
 					</button>
 
 					<button
 						onClick={handleLogout}
-						className='flex items-center justify-center w-10 h-10 rounded-full bg-(--text-muted) text-red-400 hover:text-(--text-muted) hover:bg-red-700 transition cursor-pointer'
+						className='px-3 py-1.5 rounded-full text-sm text-(--text-muted) bg-(--bg-deep) hover:bg-red-700 hover:text-white transition cursor-pointer'
 						aria-label='Log out'
-						title='Log out'
 					>
-						⎋
+						Log out
 					</button>
 				</div>
 
