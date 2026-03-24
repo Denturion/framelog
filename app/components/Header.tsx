@@ -166,7 +166,7 @@ export default function Header({ pushMovie, searchRef }: HeaderProps) {
 		<>
 			<header
 				ref={headerRef}
-				className='sticky top-0 w-full h-16 md:h-24 px-4 md:px-20 flex items-center bg-(--bg-primary) text-(--text-primary) z-100'
+				className='sticky top-0 w-full h-16 md:h-24 px-3 md:px-20 flex items-center bg-(--bg-primary) text-(--text-primary) z-100 overflow-visible'
 			>
 				{/* Logo */}
 				<div className='shrink-0'>
@@ -182,7 +182,7 @@ export default function Header({ pushMovie, searchRef }: HeaderProps) {
 				</div>
 
 				{/* Search */}
-				<div ref={searchRef} className='flex-1 flex justify-center px-2'>
+				<div ref={searchRef} className='flex-1 flex justify-center px-2 min-w-0'>
 					<input
 						onFocus={() => {
 							if (results.length > 0) setIsResultsOpen(true);
@@ -192,12 +192,12 @@ export default function Header({ pushMovie, searchRef }: HeaderProps) {
 						type='text'
 						aria-label='Search movies to add'
 						placeholder='Search...'
-						className='w-full max-w-xs md:max-w-l bg-(--bg-deep) border border-gray-800 focus:border-(--accent-primary) focus:outline-none rounded-xl p-1 pl-4 pr-4'
+						className='w-full max-w-xs md:max-w-l bg-(--bg-deep) border border-gray-800 focus:border-(--accent-primary) focus:outline-none rounded-xl py-2 px-3 md:p-1 md:pl-4 md:pr-4 text-sm'
 					/>
 				</div>
 
 				{/* Profile + Logout */}
-				<div className='flex items-center gap-2 md:gap-3 ml-2'>
+				<div className='flex items-center gap-1.5 md:gap-3 shrink-0'>
 					<button
 						onClick={() =>
 							router.push(
@@ -206,24 +206,28 @@ export default function Header({ pushMovie, searchRef }: HeaderProps) {
 									: '/mylist'
 							)
 						}
-						className='px-3 py-1.5 rounded-full text-sm text-(--text-primary) bg-(--bg-deep) hover:bg-(--bg-surface) hover:text-(--accent-primary) transition cursor-pointer'
+						className='w-8 h-8 md:w-auto md:h-auto md:px-3 md:py-1.5 rounded-full text-sm font-medium text-(--text-primary) bg-(--bg-deep) hover:bg-(--bg-surface) hover:text-(--accent-primary) transition cursor-pointer flex items-center justify-center'
 						aria-label='Open profile'
 					>
-						Profile
+						<span className='hidden md:inline'>Profile</span>
+						<span className='md:hidden'>{userInitial || '?'}</span>
 					</button>
 
 					<button
 						onClick={handleLogout}
-						className='px-3 py-1.5 rounded-full text-sm text-(--text-muted) bg-(--bg-deep) hover:bg-red-700 hover:text-white transition cursor-pointer'
+						className='w-8 h-8 md:w-auto md:h-auto md:px-3 md:py-1.5 rounded-full text-sm text-(--text-muted) bg-(--bg-deep) hover:bg-red-700 hover:text-white transition cursor-pointer flex items-center justify-center'
 						aria-label='Log out'
 					>
-						Log out
+						<span className='hidden md:inline'>Log out</span>
+						<svg className='md:hidden w-4 h-4' fill='none' viewBox='0 0 24 24' stroke='currentColor' strokeWidth={2}>
+							<path strokeLinecap='round' strokeLinejoin='round' d='M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3-3h-9m9 0l-3-3m3 3l-3 3' />
+						</svg>
 					</button>
 				</div>
 
 				{/* Search results */}
 				{results.length > 0 && isResultsOpen && (
-					<div className='absolute top-full left-0 right-0 bg-(--bg-deep) p-4 shadow-xl z-50 max-w-full'>
+					<div className='absolute top-full left-0 right-0 bg-(--bg-deep) p-3 md:p-4 shadow-xl z-50 max-w-full'>
 						<div className='flex overflow-x-auto no-scrollbar gap-2 md:gap-3 md:justify-center pb-2'>
 							{results.map((r, idx) => (
 								<button
@@ -241,6 +245,7 @@ export default function Header({ pushMovie, searchRef }: HeaderProps) {
 										alt={r.Title}
 										className='w-20 h-30 md:w-24 md:h-36 object-cover rounded-lg'
 									/>
+									<p className='text-xs text-(--text-muted) mt-1 w-20 md:w-24 truncate'>{r.Title}</p>
 								</button>
 							))}
 						</div>

@@ -45,3 +45,5 @@ next-env.d.ts
 REFACTORING_NOTES.md
 TECHNICAL_OVERVIEW.md
 DEPLOY_GUIDE.md
+
+/.claude

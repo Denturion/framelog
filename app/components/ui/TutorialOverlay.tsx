@@ -13,15 +13,57 @@ interface TutorialOverlayProps {
 	steps: TutorialStep[];
 	storageKey?: string;
 	onComplete: () => void;
+	mobileTitle?: string;
+	mobileDescription?: string;
+}
+
+function MobileWelcomePopup({
+	title,
+	description,
+	onDismiss,
+}: {
+	title: string;
+	description: string;
+	onDismiss: () => void;
+}) {
+	return (
+		<div className='fixed inset-0 z-[300] flex items-center justify-center p-6'>
+			<div className='absolute inset-0 bg-black/70' onClick={onDismiss} />
+			<div className='relative bg-(--bg-surface) rounded-xl p-6 shadow-2xl max-w-sm w-full'>
+				<h3 className='text-lg font-semibold text-(--text-primary) mb-3'>
+					{title}
+				</h3>
+				<p className='text-sm text-(--text-muted) mb-5 leading-relaxed'>
+					{description}
+				</p>
+				<button
+					onClick={onDismiss}
+					className='w-full px-4 py-2 bg-(--accent-primary) text-black rounded-lg text-sm font-medium hover:opacity-90 transition cursor-pointer'
+				>
+					Get started
+				</button>
+			</div>
+		</div>
+	);
 }
 
 export function TutorialOverlay({
 	steps,
 	storageKey = 'framelog-tutorial-done',
 	onComplete,
+	mobileTitle = 'Welcome to FrameLog!',
+	mobileDescription = 'Search for movies and add them to your list. Rate and review what you\'ve watched, and follow friends to see their activity in your feed.',
 }: TutorialOverlayProps) {
 	const [currentStep, setCurrentStep] = useState(0);
 	const [rect, setRect] = useState<DOMRect | null>(null);
+	const [isMobile, setIsMobile] = useState(false);
+
+	useEffect(() => {
+		const check = () => setIsMobile(window.innerWidth < 768);
+		check();
+		window.addEventListener('resize', check);
+		return () => window.removeEventListener('resize', check);
+	}, []);
 
 	const step = steps[currentStep];
 
@@ -31,10 +73,11 @@ export function TutorialOverlay({
 	}, [step]);
 
 	useEffect(() => {
+		if (isMobile) return;
 		updateRect();
 		window.addEventListener('resize', updateRect);
 		return () => window.removeEventListener('resize', updateRect);
-	}, [updateRect]);
+	}, [updateRect, isMobile]);
 
 	const handleNext = () => {
 		if (currentStep < steps.length - 1) {
@@ -48,6 +91,16 @@ export function TutorialOverlay({
 		localStorage.setItem(storageKey, 'true');
 		onComplete();
 	};
+
+	if (isMobile) {
+		return (
+			<MobileWelcomePopup
+				title={mobileTitle}
+				description={mobileDescription}
+				onDismiss={handleFinish}
+			/>
+		);
+	}
 
 	if (!rect) return null;
 

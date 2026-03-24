@@ -10,7 +10,6 @@ export default function RegisterForm() {
 	// State
 	const router = useRouter();
 	const [username, setUsername] = useState('');
-	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const [error, setError] = useState('');
 	const [showModal, setShowModal] = useState(false);
@@ -28,7 +27,7 @@ export default function RegisterForm() {
 		}
 
 		try {
-			const res = await register({ username, email, password });
+			const res = await register({ username, password });
 
 			if (res.ok) {
 				setCountdown(3);
@@ -67,12 +66,6 @@ export default function RegisterForm() {
 					placeholder='Username'
 					value={username}
 					onChange={(e) => setUsername(e.target.value)}
-				/>
-				<Input
-					type='email'
-					placeholder='Email'
-					value={email}
-					onChange={(e) => setEmail(e.target.value)}
 				/>
 				<Input
 					type='password'

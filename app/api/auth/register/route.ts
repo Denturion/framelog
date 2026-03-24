@@ -6,11 +6,10 @@ import { cookies } from 'next/headers';
 export async function POST(req: NextRequest) {
 	try {
 		const body = await req.json();
-		const { username, email, password } = body;
+		const { username, password } = body;
 
 		const result = await authService.register({
 			username,
-			email,
 			password,
 		});
 
@@ -39,7 +38,7 @@ export async function POST(req: NextRequest) {
 		if (error.message === 'All fields are required') {
 			return errorResponse(error.message, 400);
 		}
-		if (error.message === 'Email already in use.') {
+		if (error.message === 'Username already taken.') {
 			return errorResponse(error.message, 400);
 		}
 

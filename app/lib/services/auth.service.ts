@@ -11,16 +11,15 @@ if (!JWT_SECRET) {
 export class AuthService {
 	async register(data: {
 		username: string;
-		email: string;
 		password: string;
 	}): Promise<{ userId: string; token: string }> {
-		if (!data.username || !data.email || !data.password) {
+		if (!data.username || !data.password) {
 			throw new Error('All fields are required');
 		}
 
-		const existingUser = await userRepository.findByEmail(data.email);
+		const existingUser = await userRepository.findByUsername(data.username);
 		if (existingUser) {
-			throw new Error('Email already in use.');
+			throw new Error('Username already taken.');
 		}
 
 		const salt = await bcrypt.genSalt(10);
@@ -28,7 +27,6 @@ export class AuthService {
 
 		const newUser = await userRepository.create({
 			username: data.username,
-			email: data.email,
 			password_hash,
 		});
 

@@ -31,7 +31,7 @@ export class UserRepository {
 
 	async create(userData: {
 		username: string;
-		email: string;
+		email?: string;
 		password_hash: string;
 	}): Promise<IUser> {
 		await connectDB();

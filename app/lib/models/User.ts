@@ -14,7 +14,7 @@ export interface IMovie {
 export interface IUser extends Document {
 	_id: Types.ObjectId;
 	username: string;
-	email: string;
+	email?: string;
 	password_hash: string;
 	created_at: Date;
 	movies: IMovie[];
@@ -43,7 +43,7 @@ const userSchema = new Schema<IUser>({
 	},
 	email: {
 		type: String,
-		required: true,
+		required: false,
 	},
 	password_hash: {
 		type: String,
